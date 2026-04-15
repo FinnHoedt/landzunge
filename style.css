@@ -185,3 +185,27 @@ blockquote cite {
     padding-left: 0;
   }
 }
+
+/* ── Language toggle ──────────────────────────────── */
+.lang-toggle {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: 1px solid #4a5c4e;
+  color: #4a5c4e;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  z-index: 100;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lang-toggle:hover,
+.lang-toggle:focus-visible {
+  background: #4a5c4e;
+  color: #f8f5f0;
+  outline: none;
+}

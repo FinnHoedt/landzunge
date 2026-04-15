@@ -10,11 +10,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <button id="lang-toggle" class="lang-toggle">DE</button>
 
   <header class="hero">
-    <p class="hero__label">Protected Natural Heritage Site</p>
+    <p class="hero__label" data-en="Protected Natural Heritage Site" data-de="Geschütztes Naturdenkmal">Protected Natural Heritage Site</p>
     <h1 class="hero__title">Finn's Landzunge</h1>
-    <p class="hero__subtitle">Leipzig, Saxony &middot; Est. 2019</p>
+    <p class="hero__subtitle" data-en="Leipzig, Saxony &middot; Est. 2019" data-de="Leipzig, Sachsen &middot; Gegr. 2019">Leipzig, Saxony &middot; Est. 2019</p>
     <p class="hero__coords">51°15′41″N 12°20′22″E</p>
   </header>
 
@@ -136,5 +137,27 @@
     <p>&copy; Finn's Landzunge Heritage Foundation</p>
   </footer>
 
+  <script>
+    var titles = {
+      en: "Finn\u2019s Landzunge \u2014 Protected Natural Heritage Site",
+      de: "Finn\u2019s Landzunge \u2014 Gesch\u00fctztes Naturdenkmal"
+    };
+
+    function applyLang(lang) {
+      document.querySelectorAll('[data-' + lang + ']').forEach(function(el) {
+        el.innerHTML = el.getAttribute('data-' + lang);
+      });
+      document.documentElement.lang = lang;
+      document.title = titles[lang];
+      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'DE' : 'EN';
+      localStorage.setItem('lang', lang);
+    }
+
+    document.getElementById('lang-toggle').addEventListener('click', function() {
+      applyLang(document.documentElement.lang === 'en' ? 'de' : 'en');
+    });
+
+    applyLang(localStorage.getItem('lang') || 'en');
+  </script>
 </body>
 </html>
