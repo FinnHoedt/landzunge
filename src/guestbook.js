@@ -20,7 +20,7 @@ async function loadEntries() {
 function renderEntries(entries) {
   const container = document.getElementById('guestbook-entries')
   if (entries.length === 0) {
-    container.innerHTML = '<p style="color:#8a8a8a; font-style:italic">No entries yet. Be the first.</p>'
+    container.innerHTML = '<p style="color:#7a7a90; font-family: VT323, monospace; font-size: 1.1rem;">// NO TRANSMISSIONS LOGGED. UPLINK NOW.</p>'
     return
   }
   container.innerHTML = entries.map(e => `

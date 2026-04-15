@@ -1,14 +1,12 @@
 const SOUND_KEY = 'sound_enabled'
 
-let dialupAudio
-let ambientAudio
+let cyberpunkAudio
 let firstInteraction = false
 
 export function initSound() {
-  dialupAudio = new Audio('/sounds/dialup.mp3')
-  ambientAudio = new Audio('/sounds/lake-ambient.mp3')
-  ambientAudio.loop = true
-  ambientAudio.volume = 0.3
+  cyberpunkAudio = new Audio('/sounds/cyberpunk.mp3')
+  cyberpunkAudio.loop = true
+  cyberpunkAudio.volume = 0.3
 
   const enabled = localStorage.getItem(SOUND_KEY) !== 'false'
   updateToggleLabel(enabled)
@@ -21,8 +19,7 @@ export function initSound() {
 function handleFirstInteraction() {
   firstInteraction = true
   if (localStorage.getItem(SOUND_KEY) === 'false') return
-  dialupAudio.play().catch(() => {})
-  dialupAudio.addEventListener('ended', () => ambientAudio.play().catch(() => {}), { once: true })
+  cyberpunkAudio.play().catch(() => {})
 }
 
 function handleToggleClick() {
@@ -31,9 +28,9 @@ function handleToggleClick() {
   localStorage.setItem(SOUND_KEY, String(next))
   updateToggleLabel(next)
   if (next && firstInteraction) {
-    ambientAudio.play().catch(() => {})
+    cyberpunkAudio.play().catch(() => {})
   } else {
-    ambientAudio.pause()
+    cyberpunkAudio.pause()
     dialupAudio.pause()
   }
 }

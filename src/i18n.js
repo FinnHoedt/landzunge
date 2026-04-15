@@ -1,6 +1,6 @@
 const titles = {
-  en: 'Finn\u2019s Landzunge \u2014 Protected Natural Heritage Site',
-  de: 'Finn\u2019s Landzunge \u2014 Gesch\u00fctztes Naturdenkmal'
+  en: 'Finn\u2019s Landzunge \u2014 Bionode // Green Sector // Uplink Est. 2019',
+  de: 'Finn\u2019s Landzunge \u2014 Bioknoten // Gr\u00fcner Sektor // Uplink Gest. 2019'
 }
 
 function applyLang(lang) {
