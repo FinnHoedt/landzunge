@@ -130,7 +130,8 @@ blockquote cite {
   border-bottom: 1px solid #e8e3db;
 }
 
-.visit-table td:first-child {
+.visit-table td:first-child,
+.visit-table th {
   width: 45%;
   color: #5a5a5a;
   font-size: 0.8125rem;
@@ -170,7 +171,8 @@ blockquote cite {
     padding-bottom: 2.5rem;
   }
 
-  .visit-table td:first-child {
+  .visit-table td:first-child,
+  .visit-table th {
     width: 100%;
     display: block;
     padding-right: 0;

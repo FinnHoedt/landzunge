@@ -21,7 +21,7 @@ The real location: a grassy lakeside spot in Leipzig, Saxony. Coordinates: 51.26
 ### 1. Hero
 - Name: "Finn's Landzunge"
 - Subtitle: "Protected Natural Heritage Site · Leipzig, Saxony"
-- Established year (plausible, e.g. 2019)
+- Established year: 2019
 - Coordinates displayed formally
 
 ### 2. History
