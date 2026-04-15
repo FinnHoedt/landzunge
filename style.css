@@ -1,0 +1,167 @@
+/* ── Reset & base ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f8f5f0;
+  color: #2c2c2c;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+/* ── Layout ───────────────────────────────────────── */
+.hero,
+main,
+.footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+}
+
+.hero__label {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 0.875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #4a5c4e;
+  margin-bottom: 1rem;
+}
+
+.hero__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #2c2c2c;
+  margin-bottom: 0.75rem;
+}
+
+.hero__subtitle {
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
+  color: #5a5a5a;
+  margin-bottom: 0.5rem;
+}
+
+.hero__coords {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 0.875rem;
+  color: #4a5c4e;
+}
+
+/* ── Divider ──────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid #d4cdc4;
+  max-width: 680px;
+  margin: 3rem auto;
+}
+
+/* ── Sections ─────────────────────────────────────── */
+.section {
+  padding: 0 0 0.5rem;
+}
+
+.section h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #2c2c2c;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.02em;
+}
+
+.section p {
+  margin-bottom: 1rem;
+  color: #3a3a3a;
+}
+
+.section p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Blockquote (Notable Visitor) ─────────────────── */
+blockquote {
+  border-left: 3px solid #4a5c4e;
+  margin: 0;
+  padding: 0.75rem 0 0.75rem 1.5rem;
+}
+
+blockquote p {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.0625rem;
+  color: #2c2c2c;
+}
+
+blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-style: normal;
+  font-size: 0.875rem;
+  color: #5a5a5a;
+  letter-spacing: 0.04em;
+}
+
+/* ── Visit table ──────────────────────────────────── */
+.visit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.visit-table td {
+  padding: 0.5rem 0;
+  vertical-align: top;
+  border-bottom: 1px solid #e8e3db;
+}
+
+.visit-table td:first-child {
+  width: 45%;
+  color: #5a5a5a;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-right: 1rem;
+}
+
+.visit-table a {
+  color: #4a5c4e;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.visit-table a:hover {
+  color: #2c2c2c;
+}
+
+/* ── Footer ───────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 3rem 1.5rem 4rem;
+  font-size: 0.8125rem;
+  color: #8a8a8a;
+  letter-spacing: 0.06em;
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .hero {
+    padding-top: 3rem;
+    padding-bottom: 2.5rem;
+  }
+}
