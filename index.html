@@ -6,11 +6,12 @@
   <title>Finn's Landzunge — Protected Natural Heritage Site</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&family=VT323&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23f8f5f0'/><path d='M10 4 L22 4 Q25 16 16 29 Q7 16 10 4 Z' fill='%234a5c4e'/></svg>" />
 </head>
 <body>
+  <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound">[SND]</button>
   <button id="lang-toggle" class="lang-toggle" aria-label="Toggle language">DE</button>
 
   <header class="hero">
@@ -38,7 +39,7 @@
         Landzunge represents a rare instance of naturally accumulated shoreline — a tongue of compacted
         earth and grass extending approximately into the lake without artificial reinforcement.
       </p>
-      <p data-en="Since its documentation, the site has attracted the quiet attention of those who value understated natural phenomena. Its name appears in no official municipal register prior to Hoedt&#x2019;s intervention, a circumstance which has led some to conclude that the Landzunge existed, unknown and unnamed, for many years before its discovery." data-de="Seit seiner Dokumentation hat der Ort die stille Aufmerksamkeit jener auf sich gezogen, die unaufdringliche Naturphänomene zu schätzen wissen. Sein Name taucht in keinem offiziellen städtischen Register vor Finns Eingreifen auf — ein Umstand, der manche zu dem Schluss geführt hat, dass die Landzunge viele Jahre lang unbekannt und unbenannt existiert hatte, bevor sie entdeckt wurde.">
+      <p data-en="Since its documentation, the site has attracted the quiet attention of those who value understated natural phenomena. Its name appears in no official municipal register prior to Finn&#x2019;s intervention, a circumstance which has led some to conclude that the Landzunge existed, unknown and unnamed, for many years before its discovery." data-de="Seit seiner Dokumentation hat der Ort die stille Aufmerksamkeit jener auf sich gezogen, die unaufdringliche Naturphänomene zu schätzen wissen. Sein Name taucht in keinem offiziellen städtischen Register vor Finns Eingreifen auf — ein Umstand, der manche zu dem Schluss geführt hat, dass die Landzunge viele Jahre lang unbekannt und unbenannt existiert hatte, bevor sie entdeckt wurde.">
         Since its documentation, the site has attracted the quiet attention of those who value
         understated natural phenomena. Its name appears in no official municipal register prior to
         Finn's intervention, a circumstance which has led some to conclude that the Landzunge existed,
@@ -57,7 +58,7 @@
         shoreline at the tip offers an unobstructed 270-degree prospect across the lake — a view
         available from no other point along this stretch of bank.
       </p>
-      <p data-en="The term &lt;em&gt;Landzunge&lt;/em&gt; — literally &quot;tongue of land&quot; in German — is a precise topographic descriptor for this class of feature. The site&#x2019;s coordinates (51.2614894° N, 12.339342° E) place it within the wider Neuseenland region of Saxony, a landscape of considerable ecological and recreational interest. The Landzunge occupies a modest but irreplaceable position within this geography." data-de="Der Begriff &lt;em&gt;Landzunge&lt;/em&gt; — wörtlich „Zunge des Landes" — ist ein präziser topographischer Fachausdruck für diese Art von Formation. Die Koordinaten des Ortes (51,2614894° N, 12,339342° O) verorten ihn im weiteren Neuseenland Sachsens, einer Landschaft von erheblichem ökologischen und Freizeitwert. Die Landzunge nimmt eine bescheidene, aber unersetzliche Stellung in dieser Geographie ein.">
+      <p data-en="The term &lt;em&gt;Landzunge&lt;/em&gt; — literally &quot;tongue of land&quot; in German — is a precise topographic descriptor for this class of feature. The site&#x2019;s coordinates (51.2614894° N, 12.339342° E) place it within the wider Neuseenland region of Saxony, a landscape of considerable ecological and recreational interest. The Landzunge occupies a modest but irreplaceable position within this geography." data-de="Der Begriff &lt;em&gt;Landzunge&lt;/em&gt; — wörtlich &bdquo;Zunge des Landes&rdquo; — ist ein präziser topographischer Fachausdruck für diese Art von Formation. Die Koordinaten des Ortes (51,2614894° N, 12,339342° O) verorten ihn im weiteren Neuseenland Sachsens, einer Landschaft von erheblichem ökologischen und Freizeitwert. Die Landzunge nimmt eine bescheidene, aber unersetzliche Stellung in dieser Geographie ein.">
         The term <em>Landzunge</em> — literally "tongue of land" in German — is a precise topographic
         descriptor for this class of feature. The site's coordinates (51.2614894° N, 12.339342° E)
         place it within the wider Neuseenland region of Saxony, a landscape of considerable ecological
@@ -71,7 +72,7 @@
     <section class="section" id="visitor">
       <h2 data-en="Notable Visitor" data-de="Bemerkenswerter Besucher">Notable Visitor</h2>
       <blockquote>
-        <p data-en="&quot;There is something clarifying about standing at the very end of it. The water on both sides, the open lake ahead. One feels, briefly, that geography has made a small concession.&quot;" data-de="„Es gibt etwas Klärendes daran, ganz am äußersten Ende zu stehen. Das Wasser auf beiden Seiten, der offene See voraus. Für einen kurzen Moment hat man das Gefühl, die Geographie habe ein kleines Zugeständnis gemacht."">
+        <p data-en="&quot;There is something clarifying about standing at the very end of it. The water on both sides, the open lake ahead. One feels, briefly, that geography has made a small concession.&quot;" data-de="&bdquo;Es gibt etwas Klärendes daran, ganz am äußersten Ende zu stehen. Das Wasser auf beiden Seiten, der offene See voraus. Für einen kurzen Moment hat man das Gefühl, die Geographie habe ein kleines Zugeständnis gemacht.&ldquo;">
           "There is something clarifying about standing at the very end of it. The water on both sides,
           the open lake ahead. One feels, briefly, that geography has made a small concession."
         </p>
@@ -132,33 +133,38 @@
       </table>
     </section>
 
+    <hr class="divider" />
+
+    <section class="section" id="guestbook">
+      <h2 data-en="[!!!] Sign the Register [!!!]" data-de="[!!!] Ins Register Eintragen [!!!]">[!!!] Sign the Register [!!!]</h2>
+      <p data-en="Visitors are encouraged to record their impressions for posterity."
+         data-de="Besucher sind herzlich eingeladen, ihre Eindrücke für die Nachwelt festzuhalten.">
+        Visitors are encouraged to record their impressions for posterity.
+      </p>
+
+      <form id="guestbook-form" class="guestbook-form">
+        <div class="guestbook-form__field">
+          <label for="gb_name" data-en="Name" data-de="Name">Name</label>
+          <input id="gb_name" name="gb_name" type="text" maxlength="50" required autocomplete="off" />
+        </div>
+        <div class="guestbook-form__field">
+          <label for="gb_message" data-en="Message" data-de="Nachricht">Message</label>
+          <textarea id="gb_message" name="gb_message" maxlength="280" rows="3" required></textarea>
+        </div>
+        <button type="submit" data-en="[ Submit Entry ]" data-de="[ Eintrag absenden ]">[ Submit Entry ]</button>
+      </form>
+
+      <div id="guestbook-entries" style="margin-top:2rem"></div>
+    </section>
+
   </main>
 
   <footer class="footer">
+    <p class="retro footer__counter">Visitors: <span id="hit-counter">004,847</span></p>
     <p data-en="&copy; Finn&#x2019;s Landzunge Heritage Foundation" data-de="&copy; Finn&#x2019;s Landzunge Denkmalstiftung">&copy; Finn's Landzunge Heritage Foundation</p>
+    <p class="retro footer__netscape">Best viewed at 1024&times;768 &middot; Netscape Navigator 4.0</p>
   </footer>
 
-  <script>
-    var titles = {
-      en: "Finn\u2019s Landzunge \u2014 Protected Natural Heritage Site",
-      de: "Finn\u2019s Landzunge \u2014 Gesch\u00fctztes Naturdenkmal"
-    };
-
-    function applyLang(lang) {
-      document.querySelectorAll('[data-' + lang + ']').forEach(function(el) {
-        el.innerHTML = el.getAttribute('data-' + lang);
-      });
-      document.documentElement.lang = lang;
-      document.title = titles[lang];
-      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'DE' : 'EN';
-      localStorage.setItem('lang', lang);
-    }
-
-    document.getElementById('lang-toggle').addEventListener('click', function() {
-      applyLang(document.documentElement.lang === 'en' ? 'de' : 'en');
-    });
-
-    applyLang(localStorage.getItem('lang') || 'en');
-  </script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
