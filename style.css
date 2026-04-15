@@ -149,6 +149,11 @@ blockquote cite {
   color: #2c2c2c;
 }
 
+.visit-table a:focus-visible {
+  outline: 2px solid #4a5c4e;
+  outline-offset: 2px;
+}
+
 /* ── Footer ───────────────────────────────────────── */
 .footer {
   text-align: center;
@@ -163,5 +168,18 @@ blockquote cite {
   .hero {
     padding-top: 3rem;
     padding-bottom: 2.5rem;
+  }
+
+  .visit-table td:first-child {
+    width: 100%;
+    display: block;
+    padding-right: 0;
+    padding-bottom: 0.25rem;
+    border-bottom: none;
+  }
+
+  .visit-table td:last-child {
+    display: block;
+    padding-left: 0;
   }
 }
