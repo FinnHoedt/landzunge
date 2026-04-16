@@ -19,7 +19,7 @@ export function initSound() {
 function handleFirstInteraction() {
   firstInteraction = true
   if (localStorage.getItem(SOUND_KEY) === 'false') return
-  cyberpunkAudio.play().catch(() => {})
+  cyberpunkAudio.play().catch(() => { })
 }
 
 function handleToggleClick() {
@@ -28,10 +28,9 @@ function handleToggleClick() {
   localStorage.setItem(SOUND_KEY, String(next))
   updateToggleLabel(next)
   if (next && firstInteraction) {
-    cyberpunkAudio.play().catch(() => {})
+    cyberpunkAudio.play().catch(() => { })
   } else {
     cyberpunkAudio.pause()
-    dialupAudio.pause()
   }
 }
 

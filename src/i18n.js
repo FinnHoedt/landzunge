@@ -11,6 +11,7 @@ function applyLang(lang) {
   document.title = titles[lang]
   document.getElementById('lang-toggle').textContent = lang === 'en' ? 'DE' : 'EN'
   localStorage.setItem('lang', lang)
+  document.dispatchEvent(new CustomEvent('landzunge:langchange', { detail: { lang } }))
 }
 
 export function initI18n() {

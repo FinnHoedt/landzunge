@@ -406,3 +406,19 @@ blockquote cite {
   box-shadow: 0 0 14px var(--cyan), 0 0 28px rgba(0, 255, 255, 0.4);
   outline: none;
 }
+
+/* ── Weather terminal ─────────────────────────────── */
+.terminal-block {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  background: #050505;
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  padding: 1rem 1.25rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--cyan);
+  display: flex;
+  flex-direction: column;
+}
