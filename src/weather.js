@@ -53,12 +53,12 @@ function renderWeather() {
       const c = data.current
       const idx = de ? 1 : 0
       const condition = (WMO[c.weather_code] || ['UNKNOWN', 'UNBEKANNT'])[idx]
-      const now = new Date().toISOString().replace('T', ' ').slice(0, 16)
+      const now = new Date().toLocaleString('de-DE').replace('T', ' ').slice(0, 16)
       const sep = '\u2500'.repeat(36)
 
       const lines = [
         `> ${de ? 'WETTER-UPLINK: LANDZUNGE-NODE' : 'WEATHER UPLINK: LANDZUNGE NODE'}`,
-        `> ${de ? 'ZEITSTEMPEL  ' : 'TIMESTAMP    '}: ${now} UTC`,
+        `> ${de ? 'ZEITSTEMPEL  ' : 'TIMESTAMP    '}: ${now}`,
         `> ${de ? 'KOORDINATEN  ' : 'COORDINATES  '}: 51.2615\u00b0N 12.3393\u00b0E`,
         `> ${sep}`,
         `> ${de ? 'TEMP         ' : 'TEMP         '}: ${c.temperature_2m}\u00b0C`,
