@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js'
+import profanity from 'leo-profanity'
 
 const RATE_LIMIT_KEY = 'gb_last_submit'
 const RATE_LIMIT_MS = 60 * 60 * 1000 // 1 hour
@@ -42,6 +43,10 @@ function setupForm() {
     const name = ev.target.gb_name.value.trim().slice(0, 50)
     const message = ev.target.gb_message.value.trim().slice(0, 280)
     if (!name || !message) return
+    if (profanity.check(name) || profanity.check(message)) {
+      alert('Please keep entries respectful. This is a protected natural monument.')
+      return
+    }
     const btn = ev.target.querySelector('button[type="submit"]')
     btn.disabled = true
     const { error } = await supabase.from('guestbook_entries').insert({ name, message })
