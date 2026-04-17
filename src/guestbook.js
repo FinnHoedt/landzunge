@@ -4,6 +4,19 @@ import profanity from 'leo-profanity'
 const RATE_LIMIT_KEY = 'gb_last_submit'
 const RATE_LIMIT_MS = 60 * 60 * 1000 // 1 hour
 
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5MB
+
+function validateImage(file) {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return 'Only JPG, PNG, or WEBP images allowed.'
+  }
+  if (file.size > MAX_SIZE_BYTES) {
+    return 'Image must be under 5MB.'
+  }
+  return null
+}
+
 export async function initGuestbook() {
   await loadEntries()
   setupForm()
