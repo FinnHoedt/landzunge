@@ -35,7 +35,7 @@ export async function initGuestbook() {
 async function loadEntries() {
   const { data } = await supabase
     .from('guestbook_entries')
-    .select('name, message, created_at')
+    .select('name, message, created_at, image_path, image_approved')
     .order('created_at', { ascending: false })
     .limit(20)
   renderEntries(data ?? [])
@@ -47,12 +47,19 @@ function renderEntries(entries) {
     container.innerHTML = '<p style="color:#7a7a90; font-family: VT323, monospace; font-size: 1.1rem;">// NO TRANSMISSIONS LOGGED. UPLINK NOW.</p>'
     return
   }
-  container.innerHTML = entries.map(e => `
-    <div class="guestbook-card">
-      <div class="card-header">${esc(e.name)} &middot; ${formatDate(e.created_at)}</div>
-      <p>${esc(e.message)}</p>
-    </div>
-  `).join('')
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  container.innerHTML = entries.map(e => {
+    const imageHtml = (e.image_path && e.image_approved)
+      ? `<img class="guestbook-card__image" src="${supabaseUrl}/storage/v1/object/public/guestbook-images/${esc(e.image_path)}" alt="visitor image" loading="lazy" />`
+      : ''
+    return `
+      <div class="guestbook-card">
+        <div class="card-header">${esc(e.name)} &middot; ${formatDate(e.created_at)}</div>
+        <p>${esc(e.message)}</p>
+        ${imageHtml}
+      </div>
+    `
+  }).join('')
 }
 
 function setupForm() {
