@@ -294,12 +294,13 @@ blockquote cite {
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.5), inset 0 0 4px rgba(0, 255, 255, 0.05);
 }
 
-.gb-image-input {
+.guestbook-form input.gb-image-input {
   position: absolute;
   width: 1px;
   height: 1px;
   opacity: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .gb-image-picker {
