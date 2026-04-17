@@ -18,7 +18,8 @@ function validateImage(file) {
 }
 
 async function uploadImage(file) {
-  const ext = file.name.split('.').pop().toLowerCase()
+  const mimeToExt = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
+  const ext = mimeToExt[file.type] ?? 'bin'
   const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
   const { error } = await supabase.storage
     .from('guestbook-images')
@@ -100,7 +101,13 @@ function setupForm() {
 
     const { error } = await supabase.from('guestbook_entries').insert({ name, message, image_path })
     btn.disabled = false
-    if (error) { alert('Failed to submit. Try again.'); return }
+    if (error) {
+      if (image_path) {
+        await supabase.storage.from('guestbook-images').remove([image_path])
+      }
+      alert('Failed to submit. Try again.')
+      return
+    }
     localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()))
     ev.target.reset()
     await loadEntries()
@@ -112,6 +119,7 @@ function esc(s) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
 function formatDate(iso) {
