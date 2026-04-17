@@ -31,6 +31,7 @@ async function uploadImage(file) {
 export async function initGuestbook() {
   await loadEntries()
   setupForm()
+  setupImagePicker()
 }
 
 async function loadEntries() {
@@ -110,7 +111,27 @@ function setupForm() {
     }
     localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()))
     ev.target.reset()
+    const nameSpan = document.getElementById('gb_image_name')
+    nameSpan.textContent = 'NO FILE SELECTED'
+    nameSpan.classList.remove('has-file')
     await loadEntries()
+  })
+}
+
+function setupImagePicker() {
+  const btn = document.getElementById('gb_image_btn')
+  const input = document.getElementById('gb_image')
+  const nameSpan = document.getElementById('gb_image_name')
+  btn.addEventListener('click', () => input.click())
+  input.addEventListener('change', () => {
+    const file = input.files[0]
+    if (file) {
+      nameSpan.textContent = file.name
+      nameSpan.classList.add('has-file')
+    } else {
+      nameSpan.textContent = 'NO FILE SELECTED'
+      nameSpan.classList.remove('has-file')
+    }
   })
 }
 

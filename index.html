@@ -171,8 +171,12 @@
           <textarea id="gb_message" name="gb_message" maxlength="280" rows="3" required></textarea>
         </div>
         <div class="guestbook-form__field">
-          <label for="gb_image" data-en="VISUAL LOG (OPTIONAL)" data-de="VISUELLES LOG (OPTIONAL)">VISUAL LOG (OPTIONAL)</label>
-          <input id="gb_image" name="gb_image" type="file" accept="image/*" />
+          <label data-en="VISUAL LOG (OPTIONAL)" data-de="VISUELLES LOG (OPTIONAL)">VISUAL LOG (OPTIONAL)</label>
+          <div class="gb-image-picker">
+            <button type="button" id="gb_image_btn" class="gb-image-btn" data-en="[ ATTACH VISUAL ]" data-de="[ VISUAL ANHÄNGEN ]">[ ATTACH VISUAL ]</button>
+            <span id="gb_image_name" class="gb-image-name">NO FILE SELECTED</span>
+            <input id="gb_image" name="gb_image" type="file" accept="image/*" class="gb-image-input" aria-label="Attach image" />
+          </div>
         </div>
         <button type="submit" data-en="[ UPLINK ENTRY ]" data-de="[ EINTRAG HOCHLADEN ]">[ UPLINK ENTRY ]</button>
       </form>
