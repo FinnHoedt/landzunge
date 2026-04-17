@@ -70,9 +70,28 @@ function setupForm() {
       alert('Please keep entries respectful. This is a protected natural monument.')
       return
     }
+
+    const imageFile = ev.target.gb_image.files[0] ?? null
+    if (imageFile) {
+      const err = validateImage(imageFile)
+      if (err) { alert(err); return }
+    }
+
     const btn = ev.target.querySelector('button[type="submit"]')
     btn.disabled = true
-    const { error } = await supabase.from('guestbook_entries').insert({ name, message })
+
+    let image_path = null
+    if (imageFile) {
+      try {
+        image_path = await uploadImage(imageFile)
+      } catch {
+        alert('Image upload failed. Try again or submit without image.')
+        btn.disabled = false
+        return
+      }
+    }
+
+    const { error } = await supabase.from('guestbook_entries').insert({ name, message, image_path })
     btn.disabled = false
     if (error) { alert('Failed to submit. Try again.'); return }
     localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()))
