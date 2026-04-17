@@ -17,6 +17,16 @@ function validateImage(file) {
   return null
 }
 
+async function uploadImage(file) {
+  const ext = file.name.split('.').pop().toLowerCase()
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage
+    .from('guestbook-images')
+    .upload(path, file, { contentType: file.type, upsert: false })
+  if (error) throw new Error('Image upload failed: ' + error.message)
+  return path
+}
+
 export async function initGuestbook() {
   await loadEntries()
   setupForm()
