@@ -51,6 +51,16 @@ Both audio files must exist in `public/sounds/` for sound to work. Browser autop
 - **Layout:** centered, max-width 680px, thin `<hr class="divider">` between sections
 - Tone: deadpan-serious heritage bureaucratic prose throughout
 
+## Fonts
+
+Fonts are self-hosted via `@fontsource` npm packages (Orbitron, Rajdhani, VT323). Vite bundles the woff2 files at build time — no external font CDN requests. Do NOT add Google Fonts `<link>` tags or `@import url('fonts.googleapis.com/...')` back — loading fonts from Google's CDN sends user IPs to Google, which violates GDPR under German law (LG München ruling, Jan 2022).
+
+## Privacy / GDPR
+
+- **No cookie banner needed:** `localStorage` is used only for language preference and sound toggle — both are strictly necessary functional storage, not tracking. EU ePrivacy Directive exempts these from consent requirements.
+- **No external tracking:** No analytics, ad pixels, or third-party cookies. Keep it this way.
+- **Self-hosted fonts:** See above. Any future third-party resource that phones home (fonts, analytics, embeds) needs GDPR evaluation before adding.
+
 ## Deployment
 
 GitHub Actions (`.github/workflows/deploy.yml`) builds on push to `main` and deploys `dist/` to GitHub Pages with `cname: finnslandzunge.com`. Secrets `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` must be set in repo settings.

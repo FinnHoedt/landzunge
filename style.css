@@ -1,5 +1,9 @@
-/* ── Google Fonts: VT323 (retro) ─────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+/* ── Self-hosted fonts via @fontsource (no external requests) ─── */
+@import '@fontsource/orbitron/400.css';
+@import '@fontsource/orbitron/700.css';
+@import '@fontsource/rajdhani/400.css';
+@import '@fontsource/rajdhani/600.css';
+@import '@fontsource/vt323/400.css';
 
 /* ── Neon palette ─────────────────────────────────── */
 :root {
