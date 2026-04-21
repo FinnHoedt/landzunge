@@ -13,4 +13,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Full implementation in Task 14
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f backend/Dockerfile \
+            --build-arg VITE_API_URL=https://api.finnslandzunge.com \
+            --build-arg VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }} \
+            --build-arg VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }} \
+            -t landzunge-backend:latest \
+            .
+
+      - name: Save image to tarball
+        run: docker save landzunge-backend:latest | gzip > backend.tar.gz
+
+      - name: Copy image to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: backend.tar.gz
+          target: /tmp/
+
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            docker load < /tmp/backend.tar.gz
+            docker stop landzunge-backend || true
+            docker rm landzunge-backend || true
+            docker run -d \
+              --name landzunge-backend \
+              --restart unless-stopped \
+              -p 3000:3000 \
+              -e SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }} \
+              -e SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }} \
+              -e CORS_ORIGINS=https://finnslandzunge.com,https://admin.finnslandzunge.com \
+              -e PORT=3000 \
+              landzunge-backend:latest
+            rm /tmp/backend.tar.gz
