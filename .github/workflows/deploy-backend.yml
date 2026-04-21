@@ -1,0 +1,16 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'admin/**'
+      - '.github/workflows/deploy-backend.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Full implementation in Task 14
