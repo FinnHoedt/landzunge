@@ -82,6 +82,7 @@ function setupForm() {
       if (res.status === 400) {
         const body = await res.json()
         alert(body.message ?? 'Invalid submission.')
+        btn.disabled = false
         return
       }
       if (!res.ok) throw new Error()
