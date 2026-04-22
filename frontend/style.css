@@ -485,3 +485,54 @@ blockquote cite {
   display: flex;
   flex-direction: column;
 }
+
+/* ── Dispatches ────────────────────────────────────── */
+.dispatch-teaser,
+.dispatch {
+  margin-bottom: 2rem;
+}
+
+.dispatch-teaser__date,
+.dispatch__date {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.25rem;
+}
+
+.dispatch-teaser__title,
+.dispatch__title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  color: var(--cyan);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dispatch-teaser__excerpt,
+.dispatch__excerpt {
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.dispatches-more {
+  margin-top: 1.5rem;
+}
+
+.dispatches-more a {
+  color: var(--cyan);
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.dispatches-more a:hover {
+  text-decoration: underline;
+}
+
+.dispatches-empty {
+  color: var(--text-dim);
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+}
