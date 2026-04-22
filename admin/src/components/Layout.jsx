@@ -1,11 +1,11 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabaseClient'
+import { api } from '../lib/api'
 
 export default function Layout({ children }) {
   const navigate = useNavigate()
 
-  async function handleLogout() {
-    await supabase.auth.signOut()
+  function handleLogout() {
+    api.logout()
     navigate('/login')
   }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabaseClient'
+import { api } from '../lib/api'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -13,12 +13,13 @@ export default function Login() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    setLoading(false)
-    if (error) {
-      setError(error.message)
-    } else {
+    try {
+      await api.login(email, password)
       navigate('/guestbook')
+    } catch (err) {
+      setError(err.message ?? 'Login failed')
+    } finally {
+      setLoading(false)
     }
   }
 
