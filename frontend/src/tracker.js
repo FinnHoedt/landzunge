@@ -1,13 +1,14 @@
-import { supabase } from './supabase.js'
+const API_URL = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
 
 export async function initTracker() {
-  // Record visit and fetch total count in parallel
-  const [, { count }] = await Promise.all([
-    supabase.from('page_views').insert({}),
-    supabase.from('page_views').select('*', { count: 'exact', head: true }),
-  ])
-
-  if (count != null) {
-    document.getElementById('hit-counter').textContent = String(count).padStart(7, '0')
+  try {
+    const res = await fetch(`${API_URL}/api/tracker`, { method: 'POST' })
+    if (!res.ok) throw new Error()
+    const { count } = await res.json()
+    if (count != null) {
+      document.getElementById('hit-counter').textContent = String(count).padStart(7, '0')
+    }
+  } catch {
+    // silently ignore tracker errors
   }
 }

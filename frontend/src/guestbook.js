@@ -1,31 +1,14 @@
-import { supabase } from './supabase.js'
-import profanity from 'leo-profanity'
-
+const API_URL = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
 const RATE_LIMIT_KEY = 'gb_last_submit'
-const RATE_LIMIT_MS = 60 * 60 * 1000 // 1 hour
+const RATE_LIMIT_MS = 60 * 60 * 1000
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
-const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5MB
+const MAX_SIZE_BYTES = 5 * 1024 * 1024
 
 function validateImage(file) {
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return 'Only JPG, PNG, or WEBP images allowed.'
-  }
-  if (file.size > MAX_SIZE_BYTES) {
-    return 'Image must be under 5MB.'
-  }
+  if (!ALLOWED_TYPES.includes(file.type)) return 'Only JPG, PNG, or WEBP images allowed.'
+  if (file.size > MAX_SIZE_BYTES) return 'Image must be under 5MB.'
   return null
-}
-
-async function uploadImage(file) {
-  const mimeToExt = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
-  const ext = mimeToExt[file.type] ?? 'bin'
-  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-  const { error } = await supabase.storage
-    .from('guestbook-images')
-    .upload(path, file, { contentType: file.type, upsert: false })
-  if (error) throw new Error('Image upload failed: ' + error.message)
-  return path
 }
 
 export async function initGuestbook() {
@@ -35,12 +18,14 @@ export async function initGuestbook() {
 }
 
 async function loadEntries() {
-  const { data } = await supabase
-    .from('guestbook_entries')
-    .select('name, message, created_at, image_path, image_approved')
-    .order('created_at', { ascending: false })
-    .limit(20)
-  renderEntries(data ?? [])
+  try {
+    const res = await fetch(`${API_URL}/api/guestbook`)
+    if (!res.ok) throw new Error()
+    const entries = await res.json()
+    renderEntries(entries)
+  } catch {
+    renderEntries([])
+  }
 }
 
 function renderEntries(entries) {
@@ -49,10 +34,9 @@ function renderEntries(entries) {
     container.innerHTML = '<p style="color:#7a7a90; font-family: VT323, monospace; font-size: 1.1rem;">// NO TRANSMISSIONS LOGGED. UPLINK NOW.</p>'
     return
   }
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
   container.innerHTML = entries.map(e => {
-    const imageHtml = (e.image_path && e.image_approved)
-      ? `<img class="guestbook-card__image" src="${supabaseUrl}/storage/v1/object/public/guestbook-images/${esc(e.image_path)}" alt="visitor image" loading="lazy" />`
+    const imageHtml = e.image_url
+      ? `<img class="guestbook-card__image" src="${esc(e.image_url)}" alt="visitor image" loading="lazy" />`
       : ''
     return `
       <div class="guestbook-card">
@@ -75,10 +59,6 @@ function setupForm() {
     const name = ev.target.gb_name.value.trim().slice(0, 50)
     const message = ev.target.gb_message.value.trim().slice(0, 280)
     if (!name || !message) return
-    if (profanity.check(name) || profanity.check(message)) {
-      alert('Please keep entries respectful. This is a protected natural monument.')
-      return
-    }
 
     const imageFile = ev.target.gb_image.files[0] ?? null
     if (imageFile) {
@@ -89,26 +69,29 @@ function setupForm() {
     const btn = ev.target.querySelector('button[type="submit"]')
     btn.disabled = true
 
-    let image_path = null
-    if (imageFile) {
-      try {
-        image_path = await uploadImage(imageFile)
-      } catch {
-        alert('Image upload failed. Try again or submit without image.')
-        btn.disabled = false
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('message', message)
+    if (imageFile) formData.append('image', imageFile)
+
+    try {
+      const res = await fetch(`${API_URL}/api/guestbook`, {
+        method: 'POST',
+        body: formData,
+      })
+      if (res.status === 400) {
+        const body = await res.json()
+        alert(body.message ?? 'Invalid submission.')
         return
       }
-    }
-
-    const { error } = await supabase.from('guestbook_entries').insert({ name, message, image_path })
-    btn.disabled = false
-    if (error) {
-      if (image_path) {
-        await supabase.storage.from('guestbook-images').remove([image_path])
-      }
+      if (!res.ok) throw new Error()
+    } catch {
       alert('Failed to submit. Try again.')
+      btn.disabled = false
       return
     }
+
+    btn.disabled = false
     localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()))
     ev.target.reset()
     const nameSpan = document.getElementById('gb_image_name')
