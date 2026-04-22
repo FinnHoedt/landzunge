@@ -25,6 +25,12 @@ import { CreateEntryDto } from './dto/create-entry.dto'
 export class GuestbookController {
   constructor(private service: GuestbookService) {}
 
+  @Get('admin/all')
+  @UseGuards(SupabaseAuthGuard, AdminGuard)
+  getAllAdmin() {
+    return this.service.getAllAdmin()
+  }
+
   @Get()
   getEntries(@Query('page') page = 1) {
     return this.service.getEntries(Number(page), 20)

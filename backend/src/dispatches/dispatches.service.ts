@@ -43,7 +43,7 @@ export class DispatchesService {
   async getAllAdmin() {
     const { data, error } = await this.supabase.client
       .from('dispatches')
-      .select('id, slug, title, published, created_at')
+      .select('id, slug, title, body, published, created_at')
       .order('created_at', { ascending: false })
 
     if (error) throw new InternalServerErrorException()

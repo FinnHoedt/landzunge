@@ -39,6 +39,28 @@ export class GuestbookService {
     }))
   }
 
+  async getAllAdmin() {
+    const { data, error } = await this.supabase.client
+      .from('guestbook_entries')
+      .select('id, name, message, created_at, image_path, image_approved')
+      .order('created_at', { ascending: false })
+
+    if (error) throw new InternalServerErrorException('Failed to fetch entries')
+
+    const base = this.config.getOrThrow('SUPABASE_URL')
+    return data.map((e) => ({
+      id: e.id,
+      name: e.name,
+      message: e.message,
+      created_at: e.created_at,
+      image_path: e.image_path,
+      image_approved: e.image_approved,
+      image_url: e.image_path
+        ? `${base}/storage/v1/object/public/guestbook-images/${e.image_path}`
+        : null,
+    }))
+  }
+
   async createEntry(dto: CreateEntryDto, file?: Express.Multer.File) {
     if (profanity.check(dto.name) || profanity.check(dto.message)) {
       throw new BadRequestException('Please keep entries respectful.')

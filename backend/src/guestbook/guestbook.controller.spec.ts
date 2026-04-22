@@ -9,6 +9,7 @@ const mockService = {
   createEntry: jest.fn(),
   approveImage: jest.fn(),
   deleteEntry: jest.fn(),
+  getAllAdmin: jest.fn(),
 }
 
 describe('GuestbookController', () => {
@@ -24,6 +25,12 @@ describe('GuestbookController', () => {
       .compile()
 
     controller = module.get(GuestbookController)
+  })
+
+  it('GET /api/guestbook/admin/all calls getAllAdmin', async () => {
+    mockService.getAllAdmin = jest.fn().mockResolvedValue([])
+    await controller.getAllAdmin()
+    expect(mockService.getAllAdmin).toHaveBeenCalled()
   })
 
   it('GET /api/guestbook calls getEntries with page=1 by default', async () => {

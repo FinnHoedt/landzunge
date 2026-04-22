@@ -14,7 +14,7 @@ import { DispatchesModule } from './dispatches/dispatches.module'
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public', 'admin'),
-      serveRoot: '/admin',
+      serveRoot: '/',
       serveStaticOptions: { fallthrough: true },
       exclude: ['/api/(.*)'],
     }),
