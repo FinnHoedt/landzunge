@@ -1,8 +1,12 @@
-import { Body, Controller, HttpCode, Post, UnauthorizedException } from '@nestjs/common'
+import { Body, Controller, HttpCode, Post } from '@nestjs/common'
+import { IsEmail, IsString } from 'class-validator'
 import { AuthService } from './auth.service'
 
 class LoginDto {
+  @IsEmail()
   email: string
+
+  @IsString()
   password: string
 }
 
