@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  if (session === undefined) return <div style={{ padding: '2rem' }}>Loading...</div>
+  if (session === undefined) return <div className="p-8 text-gray-500">Loading...</div>
   if (!session) return <Navigate to="/login" replace />
   return children
 }

@@ -6,37 +6,23 @@ import { api } from '../lib/api'
 
 function Toolbar({ editor }) {
   if (!editor) return null
+  const btn = (label, action, active) => (
+    <button
+      type="button"
+      onClick={action}
+      className={`text-xs px-2 py-1 border rounded cursor-pointer ${active ? 'bg-blue-100 border-blue-400' : 'bg-white border-gray-300 hover:bg-gray-50'}`}
+    >
+      {label}
+    </button>
+  )
   return (
-    <div className="editor-toolbar">
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive('bold') ? 'active' : ''}
-      >B</button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive('italic') ? 'active' : ''}
-      ><em>I</em></button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive('heading', { level: 2 }) ? 'active' : ''}
-      >H2</button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive('bulletList') ? 'active' : ''}
-      >• List</button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={editor.isActive('blockquote') ? 'active' : ''}
-      >" Quote</button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().setHorizontalRule().run()}
-      >— HR</button>
+    <div className="flex gap-1 flex-wrap p-2 border-b border-gray-200">
+      {btn('B', () => editor.chain().focus().toggleBold().run(), editor.isActive('bold'))}
+      {btn('I', () => editor.chain().focus().toggleItalic().run(), editor.isActive('italic'))}
+      {btn('H2', () => editor.chain().focus().toggleHeading({ level: 2 }).run(), editor.isActive('heading', { level: 2 }))}
+      {btn('• List', () => editor.chain().focus().toggleBulletList().run(), editor.isActive('bulletList'))}
+      {btn('" Quote', () => editor.chain().focus().toggleBlockquote().run(), editor.isActive('blockquote'))}
+      {btn('— HR', () => editor.chain().focus().setHorizontalRule().run(), false)}
     </div>
   )
 }
@@ -88,43 +74,55 @@ export default function EditorPage() {
     }
   }
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <p className="text-gray-500">Loading...</p>
 
   return (
     <div>
-      <div className="actions-row">
-        <h2>{isEditing ? 'Edit Dispatch' : 'New Dispatch'}</h2>
-        <button onClick={() => navigate('/dispatches')}>← Back</button>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">{isEditing ? 'Edit Dispatch' : 'New Dispatch'}</h2>
+        <button
+          onClick={() => navigate('/dispatches')}
+          className="text-sm px-3 py-1.5 border border-gray-300 rounded bg-white hover:bg-gray-50 cursor-pointer"
+        >
+          ← Back
+        </button>
       </div>
-      {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
-      <div className="form-field">
-        <label>Title</label>
+      {error && <p className="text-red-600 mb-4">{error}</p>}
+      <div className="mb-4">
+        <label className="block text-xs font-semibold mb-1">Title</label>
         <input
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
           placeholder="Dispatch title"
           maxLength={200}
+          className="w-full px-2 py-2 border border-gray-300 rounded text-sm"
         />
       </div>
-      <div className="form-field">
-        <label>Body</label>
-        <div className="editor-wrapper">
+      <div className="mb-4">
+        <label className="block text-xs font-semibold mb-1">Body</label>
+        <div className="border border-gray-300 rounded focus-within:ring-2 focus-within:ring-blue-500">
           <Toolbar editor={editor} />
-          <EditorContent editor={editor} className="editor-content" />
+          <div className="p-3 min-h-[200px]">
+            <EditorContent editor={editor} />
+          </div>
         </div>
       </div>
-      <div className="form-field" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="mb-4 flex items-center gap-2">
         <input
           type="checkbox"
           id="published"
           checked={published}
           onChange={e => setPublished(e.target.checked)}
-          style={{ width: 'auto' }}
+          className="w-auto"
         />
-        <label htmlFor="published" style={{ marginBottom: 0 }}>Published</label>
+        <label htmlFor="published" className="text-xs font-semibold">Published</label>
       </div>
-      <button className="primary" onClick={handleSave} disabled={saving}>
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
+      >
         {saving ? 'Saving...' : isEditing ? 'Save changes' : 'Create dispatch'}
       </button>
     </div>
