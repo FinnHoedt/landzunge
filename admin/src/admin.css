@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Tiptap ProseMirror editor styles — not easily done with utilities */
+.ProseMirror {
+  outline: none;
+  min-height: 180px;
+}
+.ProseMirror p { margin-bottom: 0.5rem; }
+.ProseMirror h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.ProseMirror blockquote { border-left: 3px solid #d1d5db; padding-left: 0.75rem; color: #6b7280; }
+.ProseMirror ul, .ProseMirror ol { padding-left: 1.5rem; margin-bottom: 0.5rem; }
