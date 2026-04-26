@@ -31,6 +31,6 @@ jobs:
           context: .
           file: backend/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/landzunge-backend:latest
+          tags: ghcr.io/${{ github.repository_owner | lower }}/landzunge-backend:latest
           build-args: |
             VITE_API_URL=https://api.finnslandzunge.com
