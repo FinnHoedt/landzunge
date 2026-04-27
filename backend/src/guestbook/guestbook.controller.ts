@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -61,14 +62,14 @@ export class GuestbookController {
 
   @Patch(':id/approve-image')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  approveImage(@Param('id') id: string) {
+  approveImage(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.approveImage(id)
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  deleteEntry(@Param('id') id: string) {
+  deleteEntry(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.deleteEntry(id)
   }
 }

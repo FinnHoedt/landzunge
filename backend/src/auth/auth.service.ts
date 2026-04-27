@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { createClient } from '@supabase/supabase-js'
 import { SupabaseService } from '../supabase/supabase.service'
 
 @Injectable()
@@ -6,7 +7,14 @@ export class AuthService {
   constructor(private readonly supabase: SupabaseService) {}
 
   async login(email: string, password: string) {
-    const { data, error } = await this.supabase.client.auth.signInWithPassword({
+    // Use a temporary client to avoid tainting the singleton service role client with a user session
+    const tempClient = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY,
+      { auth: { persistSession: false, autoRefreshToken: false } },
+    )
+
+    const { data, error } = await tempClient.auth.signInWithPassword({
       email,
       password,
     })

@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -44,14 +45,14 @@ export class DispatchesController {
 
   @Patch(':id')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  update(@Param('id') id: string, @Body() dto: UpdateDispatchDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateDispatchDto) {
     return this.service.update(id, dto)
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  delete(@Param('id') id: string) {
+  delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.delete(id)
   }
 }
