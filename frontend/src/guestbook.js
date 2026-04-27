@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
 const RATE_LIMIT_KEY = 'gb_last_submit'
-const RATE_LIMIT_MS = 60 * 60 * 1000
+const RATE_LIMIT_MS = 60 * 5 * 1000
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE_BYTES = 5 * 1024 * 1024
