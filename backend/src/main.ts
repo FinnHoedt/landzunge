@@ -18,6 +18,7 @@ async function bootstrap() {
   })
 
   const supabaseUrl = process.env.SUPABASE_URL ?? ''
+  const apiOrigin = process.env.API_ORIGIN ?? ''
 
   app.use(
     helmet({
@@ -27,7 +28,7 @@ async function bootstrap() {
           scriptSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", supabaseUrl, 'data:'],
-          connectSrc: ["'self'"],
+          connectSrc: ["'self'", supabaseUrl, apiOrigin].filter(Boolean),
           fontSrc: ["'self'"],
           frameAncestors: ["'none'"],
           baseUri: ["'self'"],
