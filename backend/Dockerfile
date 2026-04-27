@@ -21,8 +21,11 @@ RUN npm run build
 # Stage 3: Production image
 FROM node:24-alpine
 WORKDIR /app
-COPY --from=backend-build /app/dist ./dist
-COPY --from=backend-build /app/node_modules ./node_modules
-COPY --from=admin-build /admin/dist ./public/admin
+COPY --from=backend-build --chown=node:node /app/dist ./dist
+COPY --from=backend-build --chown=node:node /app/node_modules ./node_modules
+COPY --from=admin-build --chown=node:node /admin/dist ./public/admin
 EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget -qO- http://localhost:3000/api/guestbook || exit 1
+USER node
 CMD ["node", "dist/main"]

@@ -3,9 +3,20 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common'
+import * as sanitizeHtml from 'sanitize-html'
 import { SupabaseService } from '../supabase/supabase.service'
 import { CreateDispatchDto } from './dto/create-dispatch.dto'
 import { UpdateDispatchDto } from './dto/update-dispatch.dto'
+
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['h1', 'h2', 'h3', 'hr', 'img']),
+  allowedAttributes: {
+    ...sanitizeHtml.defaults.allowedAttributes,
+    img: ['src', 'alt', 'loading'],
+  },
+  allowedSchemes: ['https'],
+  disallowedTagsMode: 'discard',
+}
 
 @Injectable()
 export class DispatchesService {
@@ -52,9 +63,10 @@ export class DispatchesService {
 
   async create(dto: CreateDispatchDto) {
     const slug = dto.slug ?? this.toSlug(dto.title)
+    const cleanBody = sanitizeHtml(dto.body, SANITIZE_OPTIONS)
     const { data, error } = await this.supabase.client
       .from('dispatches')
-      .insert({ slug, title: dto.title, body: dto.body, published: dto.published ?? false })
+      .insert({ slug, title: dto.title, body: cleanBody, published: dto.published ?? false })
       .select()
       .single()
 
@@ -65,7 +77,7 @@ export class DispatchesService {
   async update(id: string, dto: UpdateDispatchDto) {
     const updates: Record<string, unknown> = {}
     if (dto.title !== undefined) updates.title = dto.title
-    if (dto.body !== undefined) updates.body = dto.body
+    if (dto.body !== undefined) updates.body = sanitizeHtml(dto.body, SANITIZE_OPTIONS)
     if (dto.published !== undefined) updates.published = dto.published
     if (dto.slug !== undefined) updates.slug = dto.slug
 
