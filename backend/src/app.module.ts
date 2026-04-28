@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule } from '@nestjs/config'
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { ProxyAwareThrottlerGuard } from './throttler.guard'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 import { SupabaseModule } from './supabase/supabase.module'
@@ -24,6 +25,6 @@ import { DispatchesModule } from './dispatches/dispatches.module'
     GuestbookModule,
     DispatchesModule,
   ],
-  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
+  providers: [{ provide: APP_GUARD, useClass: ProxyAwareThrottlerGuard }],
 })
 export class AppModule {}
