@@ -39,7 +39,7 @@ export class GuestbookController {
 
   @Post()
   @HttpCode(201)
-  @Throttle({ default: { limit: 1, ttl: 3_600_000 } })
+  @Throttle({ default: { limit: 1, ttl: 300_000 } })
   @UseInterceptors(
     FileInterceptor('image', {
       storage: memoryStorage(),
