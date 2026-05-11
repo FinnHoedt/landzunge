@@ -27,7 +27,7 @@ import { SpaController } from './admin/spa.controller'
     GuestbookModule,
     DispatchesModule,
   ],
-  controllers: [SpaController, HealthController],
+  controllers: [HealthController, SpaController],
   providers: [{ provide: APP_GUARD, useClass: ProxyAwareThrottlerGuard }],
 })
 export class AppModule {}
