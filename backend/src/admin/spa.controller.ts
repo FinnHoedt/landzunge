@@ -10,7 +10,7 @@ export class SpaController {
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
-    if (req.path.startsWith('/api/')) {
+    if (req.path.startsWith('/api/') || req.path.includes('.')) {
       return next()
     }
     res.sendFile(join(__dirname, '..', '..', 'public', 'admin', 'index.html'))
