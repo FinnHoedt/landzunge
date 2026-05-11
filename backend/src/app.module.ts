@@ -9,6 +9,7 @@ import { SupabaseModule } from './supabase/supabase.module'
 import { AuthModule } from './auth/auth.module'
 import { GuestbookModule } from './guestbook/guestbook.module'
 import { DispatchesModule } from './dispatches/dispatches.module'
+import { SpaController } from './admin/spa.controller'
 
 @Module({
   imports: [
@@ -18,13 +19,14 @@ import { DispatchesModule } from './dispatches/dispatches.module'
       rootPath: join(__dirname, '..', 'public', 'admin'),
       serveRoot: '/',
       serveStaticOptions: { fallthrough: true },
-      exclude: ['/api/(.*)'],
+      exclude: ['/api/*path'],
     }),
     SupabaseModule,
     AuthModule,
     GuestbookModule,
     DispatchesModule,
   ],
+  controllers: [SpaController],
   providers: [{ provide: APP_GUARD, useClass: ProxyAwareThrottlerGuard }],
 })
 export class AppModule {}
