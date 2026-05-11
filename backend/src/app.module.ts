@@ -9,6 +9,7 @@ import { SupabaseModule } from './supabase/supabase.module'
 import { AuthModule } from './auth/auth.module'
 import { GuestbookModule } from './guestbook/guestbook.module'
 import { DispatchesModule } from './dispatches/dispatches.module'
+import { HealthController } from './health.controller'
 import { SpaController } from './admin/spa.controller'
 
 @Module({
@@ -26,7 +27,7 @@ import { SpaController } from './admin/spa.controller'
     GuestbookModule,
     DispatchesModule,
   ],
-  controllers: [SpaController],
+  controllers: [SpaController, HealthController],
   providers: [{ provide: APP_GUARD, useClass: ProxyAwareThrottlerGuard }],
 })
 export class AppModule {}
