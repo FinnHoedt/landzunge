@@ -53,7 +53,7 @@ function setupForm() {
     ev.preventDefault()
     const last = localStorage.getItem(RATE_LIMIT_KEY)
     if (last && Date.now() - Number(last) < RATE_LIMIT_MS) {
-      alert('One entry per hour. Come back later.')
+      alert('You can submit one entry per 5 minutes. Come back later.')
       return
     }
     const name = ev.target.gb_name.value.trim().slice(0, 50)
