@@ -10,9 +10,6 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: {
-      '/api': 'http://backend:3000',
-    },
     watch: {
       usePolling: true,
     },

@@ -14,6 +14,25 @@ npm run build    # production build → dist/
 npm run preview  # preview built output
 ```
 
+## Docker Local Development
+
+Runs all three services (frontend, admin, backend) with hot reload via Docker Compose.
+
+```bash
+docker compose up        # start all services (first run installs deps, ~30s)
+docker compose down      # stop all services (named volumes persist)
+docker compose down -v   # stop and remove named volumes (forces fresh npm install)
+```
+
+Services:
+- Frontend: http://localhost:5173
+- Admin: http://localhost:5174
+- Backend API: http://localhost:3000
+
+**Required before first run:** create `backend/.env` from `backend/.env.example` and fill in real Supabase credentials. `frontend/.env` needs `VITE_API_URL=http://localhost:3000`.
+
+**Hot reload:** source file edits on host are reflected immediately. Adding/removing npm packages requires `docker compose down -v && docker compose up` to re-run `npm install` inside containers.
+
 ## Architecture
 
 **Vite + vanilla JS, no framework.** Deployed via GitHub Actions → GitHub Pages.
