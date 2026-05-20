@@ -9,6 +9,7 @@ import { SupabaseModule } from './supabase/supabase.module'
 import { AuthModule } from './auth/auth.module'
 import { GuestbookModule } from './guestbook/guestbook.module'
 import { DispatchesModule } from './dispatches/dispatches.module'
+import { TrackerModule } from './tracker/tracker.module'
 import { HealthController } from './health.controller'
 import { SpaController } from './admin/spa.controller'
 
@@ -26,6 +27,7 @@ import { SpaController } from './admin/spa.controller'
     AuthModule,
     GuestbookModule,
     DispatchesModule,
+    TrackerModule,
   ],
   controllers: [HealthController, SpaController],
   providers: [{ provide: APP_GUARD, useClass: ProxyAwareThrottlerGuard }],
