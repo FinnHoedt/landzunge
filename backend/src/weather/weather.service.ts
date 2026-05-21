@@ -61,7 +61,7 @@ export class WeatherService {
     if (cached !== undefined) return cached
 
     try {
-      const res = await fetch('http://api.openmeteo.com/observations/openmeteo/1001/t2')
+      const res = await fetch('https://api.openmeteo.com/observations/openmeteo/1001/t2')
       if (!res.ok) return null
       const data: [number, number] = await res.json()
       const temp = data[1]
