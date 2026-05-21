@@ -116,8 +116,7 @@ export class WeatherController {
 ```typescript
 // backend/src/weather/weather.service.ts
 import { Injectable, BadGatewayException, Inject } from '@nestjs/common'
-import { CACHE_MANAGER } from '@nestjs/cache-manager'
-import { Cache } from 'cache-manager'
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager'
 
 const LAT = 51.2614894
 const LON = 12.339342
