@@ -49,4 +49,37 @@ describe('TrackerService', () => {
       expect(await service.track()).toEqual({ count: 0 })
     })
   })
+
+  describe('getCount', () => {
+    it('returns the current total count without inserting', async () => {
+      const supabase = makeSupabase()
+      supabase.client.from.mockReturnValueOnce({
+        select: jest.fn().mockResolvedValue({ count: 99, error: null }),
+      })
+
+      const service = new TrackerService(supabase as any)
+      expect(await service.getCount()).toEqual({ count: 99 })
+      expect(supabase.client.from).toHaveBeenCalledTimes(1)
+    })
+
+    it('throws on count error', async () => {
+      const supabase = makeSupabase()
+      supabase.client.from.mockReturnValueOnce({
+        select: jest.fn().mockResolvedValue({ count: null, error: new Error('db') }),
+      })
+
+      const service = new TrackerService(supabase as any)
+      await expect(service.getCount()).rejects.toThrow(InternalServerErrorException)
+    })
+
+    it('returns 0 when count is null but no error', async () => {
+      const supabase = makeSupabase()
+      supabase.client.from.mockReturnValueOnce({
+        select: jest.fn().mockResolvedValue({ count: null, error: null }),
+      })
+
+      const service = new TrackerService(supabase as any)
+      expect(await service.getCount()).toEqual({ count: 0 })
+    })
+  })
 })
