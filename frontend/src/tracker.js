@@ -7,8 +7,8 @@ export async function initTracker() {
     let count
     if (res.ok) {
       ;({ count } = await res.json())
-    } else if (res.status === 429) {
-      // Rate-limited: fetch current count without incrementing
+    } else {
+      // POST failed (rate-limited, server error, etc.): fetch current count without incrementing
       const fallback = await fetch(`${API_URL}/api/tracker`)
       if (fallback.ok) {
         ;({ count } = await fallback.json())

@@ -17,6 +17,7 @@ describe('TrackerService', () => {
 
       const service = new TrackerService(supabase as any)
       expect(await service.track()).toEqual({ count: 42 })
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
 
     it('throws on insert error', async () => {
@@ -27,6 +28,7 @@ describe('TrackerService', () => {
 
       const service = new TrackerService(supabase as any)
       await expect(service.track()).rejects.toThrow(InternalServerErrorException)
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
 
     it('throws on count error', async () => {
@@ -37,6 +39,7 @@ describe('TrackerService', () => {
 
       const service = new TrackerService(supabase as any)
       await expect(service.track()).rejects.toThrow(InternalServerErrorException)
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
 
     it('returns 0 when count is null but no error', async () => {
@@ -47,6 +50,7 @@ describe('TrackerService', () => {
 
       const service = new TrackerService(supabase as any)
       expect(await service.track()).toEqual({ count: 0 })
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
   })
 
@@ -60,6 +64,7 @@ describe('TrackerService', () => {
       const service = new TrackerService(supabase as any)
       expect(await service.getCount()).toEqual({ count: 99 })
       expect(supabase.client.from).toHaveBeenCalledTimes(1)
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
 
     it('throws on count error', async () => {
@@ -70,6 +75,7 @@ describe('TrackerService', () => {
 
       const service = new TrackerService(supabase as any)
       await expect(service.getCount()).rejects.toThrow(InternalServerErrorException)
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
 
     it('returns 0 when count is null but no error', async () => {
@@ -80,6 +86,7 @@ describe('TrackerService', () => {
 
       const service = new TrackerService(supabase as any)
       expect(await service.getCount()).toEqual({ count: 0 })
+      expect(supabase.client.from).toHaveBeenCalledWith('page_views')
     })
   })
 })

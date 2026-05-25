@@ -6,6 +6,7 @@ describe('TrackerController', () => {
     const controller = new TrackerController(service as any)
     expect(await controller.track()).toEqual({ count: 7 })
     expect(service.track).toHaveBeenCalledTimes(1)
+    expect(service.getCount).not.toHaveBeenCalled()
   })
 
   it('delegates to service.getCount() on GET', async () => {
@@ -13,5 +14,6 @@ describe('TrackerController', () => {
     const controller = new TrackerController(service as any)
     expect(await controller.getCount()).toEqual({ count: 42 })
     expect(service.getCount).toHaveBeenCalledTimes(1)
+    expect(service.track).not.toHaveBeenCalled()
   })
 })
