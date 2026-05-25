@@ -1,10 +1,16 @@
-import { Controller, HttpCode, Post } from '@nestjs/common'
+import { Controller, Get, Header, HttpCode, Post } from '@nestjs/common'
 import { Throttle } from '@nestjs/throttler'
 import { TrackerService } from './tracker.service'
 
 @Controller('api/tracker')
 export class TrackerController {
   constructor(private service: TrackerService) {}
+
+  @Get()
+  @Header('Cache-Control', 'no-store')
+  getCount() {
+    return this.service.getCount()
+  }
 
   @Post()
   @HttpCode(200)
