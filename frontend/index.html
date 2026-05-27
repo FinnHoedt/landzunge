@@ -194,7 +194,41 @@
     <!-- Room 04: Visitor Canvas -->
     <section id="room-04" class="room room--canvas"
              aria-label="Visitor canvas — log your transmission">
-      <div class="room__content"><!-- Room 04 content goes here --></div>
+      <div class="room__content">
+  <!-- Ghost words layer (decorative, behind entries) -->
+  <div class="canvas-ghosts" aria-hidden="true">
+    <span class="canvas-ghost" style="top: 10%; left: 20%;">CHAOS</span>
+    <span class="canvas-ghost" style="top: 52%; left: 42%;">BEAUTIFUL</span>
+    <span class="canvas-ghost" style="top: 72%; left: 8%;">LOST</span>
+  </div>
+
+  <!-- Entries layer — populated by guestbook.js -->
+  <div id="canvas-entries" class="canvas-entries" role="list" aria-label="Visitor transmissions"></div>
+
+  <!-- Collapsed form strip (default state) -->
+  <div id="canvas-form-strip" class="canvas-form-strip">
+    <div class="canvas-cursor" aria-hidden="true"></div>
+    <span class="canvas-prompt">LOG YOUR TRANSMISSION_</span>
+  </div>
+
+  <!-- Expanded form (hidden by default) -->
+  <div id="canvas-form-expanded" class="canvas-form-expanded" hidden>
+    <form id="canvas-form" class="canvas-form" novalidate>
+      <div class="canvas-form__field">
+        <input id="gb_name" name="gb_name" type="text" maxlength="50" required
+               autocomplete="off" placeholder="HANDLE" class="canvas-input" />
+      </div>
+      <div class="canvas-form__field">
+        <textarea id="gb_message" name="gb_message" maxlength="280" rows="3" required
+                  placeholder="TRANSMISSION..." class="canvas-input"></textarea>
+      </div>
+      <div class="canvas-form__actions">
+        <button type="submit" class="canvas-submit">[ UPLINK ]</button>
+        <button type="button" id="canvas-cancel" class="canvas-cancel">[ CANCEL ]</button>
+      </div>
+    </form>
+  </div>
+</div>
     </section>
 
   </div>
