@@ -3,6 +3,7 @@ export function initRoomCounter() {
   if (!counter) return
 
   const container = document.querySelector('.snap-container')
+  if (!container) return
   const rooms = Array.from(document.querySelectorAll('.room'))
   const total = rooms.length
 
