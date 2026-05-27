@@ -71,7 +71,26 @@
       <div class="room__bg room__bg--weather"></div>
       <div class="room__overlay"></div>
       <div class="room__grain"></div>
-      <div class="room__content"><!-- Room 02 content goes here --></div>
+      <div class="room__content">
+  <!-- Top-left metadata strip -->
+  <div class="wx-meta">
+    <span>FINN'S LANDZUNGE // EXPERIMENTAL PORTFOLIO</span>
+    <span>DATA FEED: STATION_01</span>
+  </div>
+
+  <!-- Weather data — vertically centered -->
+  <div class="wx-display" aria-live="polite">
+    <div class="wx-row wx-row--wind">
+      WIND: <span id="wx-wind" class="wx-value">--</span> KM/H
+    </div>
+    <div class="wx-row wx-row--temp">
+      TEMP: <span id="wx-temp" class="wx-value">--</span>°C
+    </div>
+    <div class="wx-row wx-row--water">
+      WATER: <span id="wx-water" class="wx-value">--</span>°C
+    </div>
+  </div>
+</div>
     </section>
 
     <!-- Room 03: Exhibition Plaque -->

@@ -185,3 +185,59 @@ body {
   color: var(--black);
   animation: none;
 }
+
+/* ══════════════════════════════════════════════════
+   ROOM 02 — WEATHER MONUMENT
+   ══════════════════════════════════════════════════ */
+
+.room__bg--weather {
+  background-image: url('/images/weather.jpg');
+}
+
+.room--weather .room__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+.wx-meta {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wx-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.wx-row {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.wx-row--wind  { font-size: clamp(4rem, 11vw, 14rem); }
+.wx-row--temp  { font-size: clamp(3rem,  8vw,  10rem); }
+.wx-row--water { font-size: clamp(2rem,  5vw,   7rem); color: var(--dim); }
+
+/* Pulse animation on loading dashes */
+.wx-value:empty,
+.wx-value[data-loading] {
+  animation: pulse 1.5s ease-in-out infinite;
+}
