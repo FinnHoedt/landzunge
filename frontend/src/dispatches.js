@@ -36,7 +36,7 @@ export async function initDispatchesPage() {
     }
     container.innerHTML = dispatches.map(d => `
       <article class="dispatch-item">
-        <time class="dispatch-item__date">${formatDate(d.created_at)}</time>
+        <time class="dispatch-item__date" datetime="${esc(d.created_at)}">${formatDate(d.created_at)}</time>
         <h2 class="dispatch-item__title">${esc(d.title)}</h2>
         <p class="dispatch-item__excerpt">${esc(d.excerpt)}</p>
         <hr class="dispatch-divider" />
