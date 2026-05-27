@@ -28,6 +28,17 @@
   padding: 0;
 }
 
+/* ── Base ────────────────────────────────────────────────────── */
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+}
+
 /* ── Snap container ──────────────────────────────────────────── */
 /* Uses a wrapper div so scroll-snap doesn't conflict with
    the body on Safari. body stays height: auto. */
