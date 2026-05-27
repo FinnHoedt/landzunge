@@ -98,7 +98,7 @@ function setupForm() {
     if (!name || !message) return
 
     const submitBtn = form.querySelector('.canvas-submit')
-    submitBtn.disabled = true
+    if (submitBtn) submitBtn.disabled = true
 
     const formData = new FormData()
     formData.append('name', name)
@@ -112,18 +112,18 @@ function setupForm() {
       if (res.status === 400) {
         const body = await res.json()
         alert(body.message ?? 'INVALID SUBMISSION.')
-        submitBtn.disabled = false
+        if (submitBtn) submitBtn.disabled = false
         return
       }
       if (!res.ok) throw new Error()
     } catch {
       alert('UPLINK FAILED. TRY AGAIN.')
-      submitBtn.disabled = false
+      if (submitBtn) submitBtn.disabled = false
       return
     }
 
     localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()))
-    submitBtn.disabled = false
+    if (submitBtn) submitBtn.disabled = false
     closeForm()
     await loadEntries()
   })
