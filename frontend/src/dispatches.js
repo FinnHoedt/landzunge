@@ -31,19 +31,19 @@ export async function initDispatchesPage() {
     if (!res.ok) throw new Error()
     const dispatches = await res.json()
     if (dispatches.length === 0) {
-      container.innerHTML = '<p class="dispatches-empty">// NO DISPATCHES FILED. STANDBY.</p>'
+      container.innerHTML = '<p class="dispatch-empty">// NO DISPATCHES FILED. STANDBY.</p>'
       return
     }
     container.innerHTML = dispatches.map(d => `
-      <article class="dispatch">
-        <div class="dispatch__date retro">${formatDate(d.created_at)}</div>
-        <h2 class="dispatch__title">${esc(d.title)}</h2>
-        <p class="dispatch__excerpt">${esc(d.excerpt)}</p>
-        <hr class="divider" />
+      <article class="dispatch-item">
+        <time class="dispatch-item__date">${formatDate(d.created_at)}</time>
+        <h2 class="dispatch-item__title">${esc(d.title)}</h2>
+        <p class="dispatch-item__excerpt">${esc(d.excerpt)}</p>
+        <hr class="dispatch-divider" />
       </article>
     `).join('')
   } catch {
-    container.innerHTML = '<p class="dispatches-empty">// UPLINK FAILED.</p>'
+    container.innerHTML = '<p class="dispatch-empty">// UPLINK FAILED.</p>'
   }
 }
 

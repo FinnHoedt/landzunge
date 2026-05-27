@@ -595,4 +595,122 @@ body {
   padding: 0;
 }
 
+/* ══════════════════════════════════════════════════
+   DISPATCHES PAGE
+   ══════════════════════════════════════════════════ */
+
+.dispatches-page {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Space Mono', monospace;
+  min-height: 100dvh;
+}
+
+/* Fixed return link */
+.dispatches-return {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--acid);
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  z-index: 100;
+}
+
+.dispatches-return:hover { text-decoration: underline; }
+
+/* Header */
+.dispatches-header {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3rem 4rem 4rem;
+  overflow: hidden;
+}
+
+.dispatches-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: clamp(5rem, 18vw, 16rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-top: -0.1em;
+  margin-bottom: 1.5rem;
+}
+
+.dispatches-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Dispatch list */
+.dispatches-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 4rem 6rem;
+}
+
+.dispatch-item {
+  padding: 2.5rem 0;
+}
+
+.dispatch-item__date {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: #555;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.dispatch-item__title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: var(--white);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.dispatch-item__excerpt {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+.dispatch-divider {
+  border: none;
+  border-top: 1px solid #1a1a1a;
+  margin-top: 2.5rem;
+}
+
+.dispatch-empty {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: #555;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .dispatches-header { padding: 3rem 1.5rem 3rem; }
+  .dispatches-main   { padding: 0 1.5rem 4rem; }
+}
+
 .canvas-cancel:hover { color: var(--dim); }
