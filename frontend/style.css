@@ -41,7 +41,7 @@ body {
 
 /* ── Snap container ──────────────────────────────────────────── */
 /* Uses a wrapper div so scroll-snap doesn't conflict with
-   the body on Safari. body stays height: auto. */
+   the body on Safari. html and body are 100% height to anchor the viewport. */
 .snap-container {
   height: 100dvh;
   overflow-y: scroll;
@@ -237,7 +237,6 @@ body {
 .wx-row--water { font-size: clamp(2rem,  5vw,   7rem); color: var(--dim); }
 
 /* Pulse animation on loading dashes */
-.wx-value:empty,
 .wx-value[data-loading] {
   animation: pulse 1.5s ease-in-out infinite;
 }

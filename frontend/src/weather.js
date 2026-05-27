@@ -24,11 +24,11 @@ function setValues(wind, temp, water) {
 export function initWeather() {
   setLoading()
   fetch(`${API_URL}/api/weather`)
-    .then(r => r.json())
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json() })
     .then(data => {
       const wind  = data.wind_speed_10m  != null ? String(Math.round(data.wind_speed_10m))  : '--'
-      const temp  = data.temperature_2m  != null ? String(data.temperature_2m)  : '--'
-      const water = data.water_temperature != null ? String(data.water_temperature) : '--'
+      const temp  = data.temperature_2m  != null ? String(Math.round(data.temperature_2m))  : '--'
+      const water = data.water_temperature != null ? String(Math.round(data.water_temperature)) : '--'
       setValues(wind, temp, water)
     })
     .catch(() => setValues('--', '--', '--'))
