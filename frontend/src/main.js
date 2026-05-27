@@ -1,4 +1,6 @@
-import { initWeather } from './weather.js'
+import { initGuestbook }    from './guestbook.js'
+import { initWeather }      from './weather.js'
+import { initRoomCounter }  from './room-counter.js'
 
 // Enter button → Room 02
 document.getElementById('enter-btn')
@@ -8,3 +10,5 @@ document.getElementById('enter-btn')
   })
 
 initWeather()
+initGuestbook()
+initRoomCounter()
