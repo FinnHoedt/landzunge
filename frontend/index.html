@@ -45,7 +45,24 @@
              aria-label="Entrance — Finn's Landzunge, coordinates 51°15'41″N 12°20'22″E">
       <div class="room__bg room__bg--entrance"></div>
       <div class="room__grain"></div>
-      <div class="room__content"><!-- Room 01 content goes here --></div>
+      <div class="room__content">
+  <!-- Visually hidden h1 for SEO + screen readers -->
+  <h1 class="sr-only">Finn's Landzunge</h1>
+
+  <!-- GPS coordinates — the visual headline -->
+  <div class="entrance__coords" role="img" aria-label="GPS coordinates: 51 degrees 15 minutes 41 seconds North, 12 degrees 20 minutes 22 seconds East">
+    <span>51°15′41″N</span>
+    <span>12°20′22″E</span>
+  </div>
+
+  <!-- Subtitle label -->
+  <p class="entrance__label">FINN'S LANDZUNGE // EXPERIMENTAL PORTFOLIO</p>
+
+  <!-- Entry CTA -->
+  <button class="entrance__cta" id="enter-btn" type="button">
+    [ ENTER EXHIBITION ]
+  </button>
+</div>
     </section>
 
     <!-- Room 02: Weather Monument -->

@@ -110,3 +110,78 @@ body {
   z-index: 1000;
   pointer-events: none;
 }
+
+/* ══════════════════════════════════════════════════
+   ROOM 01 — ENTRANCE
+   ══════════════════════════════════════════════════ */
+
+.room__bg--entrance {
+  background-image: url('/images/hero.jpg');
+}
+
+/* Visually hidden utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.room--entrance .room__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.entrance__coords {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 12vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.entrance__label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.entrance__cta {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: 1px solid var(--acid);
+  color: var(--acid);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  animation: blink 1s step-end infinite;
+  white-space: nowrap;
+}
+
+.entrance__cta:hover {
+  background: var(--acid);
+  color: var(--black);
+  animation: none;
+}

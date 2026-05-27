@@ -11,3 +11,7 @@ initGuestbook()
 initTracker()
 initWeather()
 initDispatchesTeaser()
+
+document.getElementById('enter-btn')?.addEventListener('click', () => {
+  document.getElementById('room-02')?.scrollIntoView({ behavior: 'smooth' })
+})
