@@ -241,3 +241,173 @@ body {
 .wx-value[data-loading] {
   animation: pulse 1.5s ease-in-out infinite;
 }
+
+/* ══════════════════════════════════════════════════
+   ROOM 03 — EXHIBITION PLAQUE
+   ══════════════════════════════════════════════════ */
+
+.room__content--plaque {
+  display: flex;
+  height: 100dvh;
+}
+
+/* Left column — scrollable */
+.plaque-left {
+  width: 65%;
+  height: 100dvh;
+  overflow-y: auto;
+  scrollbar-width: none;          /* hide scrollbar — brutalist friction */
+  padding: 3rem 3rem 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overscroll-behavior: contain;   /* prevent triggering page snap */
+}
+
+.plaque-left::-webkit-scrollbar { display: none; }
+
+/* Right column — fixed slivers */
+.plaque-right {
+  width: 35%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--black);       /* 1px gap colour */
+  flex-shrink: 0;
+}
+
+.plaque-sliver {
+  flex: 1;
+  background-color: #111;         /* fallback until images provided */
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(100%) contrast(1.3) brightness(0.85);
+}
+
+/* Section labels */
+.plaque-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  margin-top: -0.1em;             /* bleed into top padding slightly */
+  margin-bottom: 1.25rem;
+}
+
+.plaque-sublabel {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 4vw, 3.5rem);
+  color: var(--white);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+/* Divider rules */
+.plaque-rule {
+  border: none;
+  border-top: 1px solid #222;
+  margin: 1.5rem 0;
+}
+
+/* Body text */
+.plaque-body {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.plaque-body em {
+  font-style: italic;
+  color: var(--white);
+}
+
+.plaque-section {
+  margin-bottom: 0.5rem;
+}
+
+/* Navigation DL */
+.plaque-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plaque-nav__row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.plaque-nav dt {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: #555;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plaque-nav dd {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: #ccc;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.plaque-link {
+  color: var(--acid);
+  text-decoration: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.plaque-link:hover {
+  text-decoration: underline;
+}
+
+/* Quote block */
+.plaque-quote {
+  border-left: 3px solid var(--acid);
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.plaque-quote p {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: #ccc;
+  letter-spacing: 0.04em;
+  font-style: italic;
+  line-height: 1.7;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.plaque-quote cite {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: #555;
+  letter-spacing: 0.08em;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+/* Responsive: stack on narrow screens */
+@media (max-width: 768px) {
+  .room__content--plaque { flex-direction: column; }
+  .plaque-left  { width: 100%; height: auto; }
+  .plaque-right { width: 100%; height: 25dvh; flex-direction: row; }
+}
