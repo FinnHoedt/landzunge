@@ -13,7 +13,9 @@ function hashId(str) {
 
 function entryPosition(id) {
   const hash = hashId(id)
-  const left = (hash % 55) + 5        // 5% – 60% — cap keeps entries from clipping on narrow viewports
+  const rawLeft = (hash % 55) + 5
+  const maxLeft = Math.max(5, Math.floor(((window.innerWidth - 220 - 16) / window.innerWidth) * 100))
+  const left = Math.min(rawLeft, maxLeft)
   const top  = ((hash >> 4) % 70) + 5 // 5% – 75%
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
   const fontSize = sizes[hash % 4]
@@ -40,7 +42,7 @@ function renderEntries(entries) {
       : ''
     return `
       <div class="canvas-entry${isNewest ? ' canvas-entry--newest' : ''}"
-           style="left: ${left}%; top: ${top}%; font-size: ${fontSize}; --entry-left: ${left}vw;"
+           style="left: ${left}%; top: ${top}%; font-size: ${fontSize};"
            role="listitem">
         <span class="canvas-handle">${esc(e.name)}</span>
         <span class="canvas-message">${esc(e.message)}</span>
