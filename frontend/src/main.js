@@ -31,27 +31,30 @@ if (plaqueLeft && snapContainer) {
     }
   }, { passive: true })
 
-  // Touch (mobile) — record boundary state at gesture start, escape on swipe
-  // past a 100px threshold. dy > 0 = swiped up = intent to scroll down.
-  let touchStartY   = 0
-  let touchAtTop    = false
-  let touchAtBottom = false
+  // Touch escape only needed on non-touch-primary devices (desktop trackpads
+  // with touch emulation). On mobile, plaque-left has overflow-y:hidden so
+  // the snap container handles swipes directly — no escape logic needed.
+  if (window.matchMedia('(hover: hover)').matches) {
+    let touchStartY   = 0
+    let touchAtTop    = false
+    let touchAtBottom = false
 
-  plaqueLeft.addEventListener('touchstart', (e) => {
-    touchStartY   = e.touches[0].clientY
-    touchAtTop    = plaqueLeft.scrollTop <= 1
-    touchAtBottom = plaqueLeft.scrollTop + plaqueLeft.clientHeight >= plaqueLeft.scrollHeight - 1
-  }, { passive: true })
+    plaqueLeft.addEventListener('touchstart', (e) => {
+      touchStartY   = e.touches[0].clientY
+      touchAtTop    = plaqueLeft.scrollTop <= 1
+      touchAtBottom = plaqueLeft.scrollTop + plaqueLeft.clientHeight >= plaqueLeft.scrollHeight - 1
+    }, { passive: true })
 
-  plaqueLeft.addEventListener('touchend', (e) => {
-    const dy = touchStartY - e.changedTouches[0].clientY // >0 = swiped up
+    plaqueLeft.addEventListener('touchend', (e) => {
+      const dy = touchStartY - e.changedTouches[0].clientY // >0 = swiped up
 
-    if (touchAtTop && dy < -100 && room02) {
-      snapContainer.scrollTo({ top: room02.offsetTop, behavior: 'smooth' })
-    } else if (touchAtBottom && dy > 100 && room04) {
-      snapContainer.scrollTo({ top: room04.offsetTop, behavior: 'smooth' })
-    }
-  }, { passive: true })
+      if (touchAtTop && dy < -100 && room02) {
+        snapContainer.scrollTo({ top: room02.offsetTop, behavior: 'smooth' })
+      } else if (touchAtBottom && dy > 100 && room04) {
+        snapContainer.scrollTo({ top: room04.offsetTop, behavior: 'smooth' })
+      }
+    }, { passive: true })
+  }
 }
 
 initWeather()

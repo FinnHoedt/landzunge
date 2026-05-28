@@ -36,12 +36,16 @@ function renderEntries(entries) {
   container.innerHTML = entries.map(e => {
     const { left, top, fontSize } = entryPosition(e.id)
     const isNewest = e.id === newestId
+    const imgHtml = e.image_url
+      ? `<img class="canvas-entry-image" src="${esc(e.image_url)}" alt="" loading="lazy" />`
+      : ''
     return `
       <div class="canvas-entry${isNewest ? ' canvas-entry--newest' : ''}"
            style="left: ${left}%; top: ${top}%; font-size: ${fontSize};"
            role="listitem">
         <span class="canvas-handle">${esc(e.name)}</span>
         <span class="canvas-message">${esc(e.message)}</span>
+        ${imgHtml}
       </div>
     `
   }).join('')

@@ -232,9 +232,9 @@ body {
   white-space: nowrap;
 }
 
-.wx-row--wind  { font-size: clamp(4rem, 11vw, 14rem); }
-.wx-row--temp  { font-size: clamp(3rem,  8vw,  10rem); }
-.wx-row--water { font-size: clamp(2rem,  5vw,   7rem); color: var(--dim); }
+.wx-row--wind  { font-size: clamp(2rem,   11vw, 14rem); }
+.wx-row--temp  { font-size: clamp(1.5rem,  8vw, 10rem); }
+.wx-row--water { font-size: clamp(1.25rem, 5vw,  7rem); color: var(--dim); }
 
 /* Pulse animation on loading dashes */
 .wx-value[data-loading] {
@@ -407,8 +407,17 @@ body {
 /* Responsive: stack on narrow screens */
 @media (max-width: 768px) {
   .room__content--plaque { flex-direction: column; }
-  .plaque-left  { width: 100%; height: auto; }
-  .plaque-right { width: 100%; height: 25dvh; flex-direction: row; }
+  .plaque-left  {
+    width: 100%;
+    height: 0;
+    flex: 1;
+    min-height: 0;
+    padding: 2rem 1.25rem;
+    /* Switch from contain → auto so hitting the scroll boundary propagates
+       naturally to the snap container instead of trapping the user. */
+    overscroll-behavior: auto;
+  }
+  .plaque-right { width: 100%; height: 18dvh; flex-direction: row; }
 }
 
 /* ══════════════════════════════════════════════════
@@ -477,6 +486,15 @@ body {
 
 .canvas-entry--newest .canvas-message {
   color: var(--white);
+}
+
+.canvas-entry-image {
+  display: block;
+  margin-top: 0.3rem;
+  max-width: 100%;
+  width: 72px;
+  opacity: 0.55;
+  filter: grayscale(1);
 }
 
 /* Collapsed form strip */
