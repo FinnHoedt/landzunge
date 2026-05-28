@@ -6,6 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const profanity = require('leo-profanity') as typeof import('leo-profanity')
+import * as sharp from 'sharp'
 import { SupabaseService } from '../supabase/supabase.service'
 import { CreateEntryDto } from './dto/create-entry.dto'
 
@@ -114,11 +115,16 @@ export class GuestbookService {
   }
 
   private async uploadImage(file: Express.Multer.File): Promise<string> {
-    const ext = file.mimetype.split('/')[1]
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const processed = await sharp(file.buffer)
+      .grayscale()
+      .resize({ width: 600, withoutEnlargement: true })
+      .jpeg({ quality: 72 })
+      .toBuffer()
+
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
     const { error } = await this.supabase.client.storage
       .from('guestbook-images')
-      .upload(path, file.buffer, { contentType: file.mimetype, upsert: false })
+      .upload(path, processed, { contentType: 'image/jpeg', upsert: false })
     if (error) throw new InternalServerErrorException('Image upload failed')
     return path
   }
