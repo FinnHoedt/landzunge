@@ -9,9 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/orbitron": "^5.2.8",
-    "@fontsource/rajdhani": "^5.2.7",
-    "@fontsource/vt323": "^5.2.7"
+    "@fontsource/inter": "^5.1.0",
+    "@fontsource/space-mono": "^5.1.0"
   },
   "devDependencies": {
     "vite": "^6.3.2"
