@@ -464,7 +464,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  max-width: 220px;
+  max-width: min(220px, calc(100vw - var(--entry-left, 0vw) - 1rem));
 }
 
 .canvas-handle {

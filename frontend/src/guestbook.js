@@ -40,7 +40,7 @@ function renderEntries(entries) {
       : ''
     return `
       <div class="canvas-entry${isNewest ? ' canvas-entry--newest' : ''}"
-           style="left: ${left}%; top: ${top}%; font-size: ${fontSize};"
+           style="left: ${left}%; top: ${top}%; font-size: ${fontSize}; --entry-left: ${left}vw;"
            role="listitem">
         <span class="canvas-handle">${esc(e.name)}</span>
         <span class="canvas-message">${esc(e.message)}</span>
