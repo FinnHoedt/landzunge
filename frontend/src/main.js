@@ -9,10 +9,11 @@ document.getElementById('enter-btn')
       ?.scrollIntoView({ behavior: 'smooth' })
   })
 
-// Room 03: plaque-left uses overscroll-behavior:contain so inner scroll
-// doesn't accidentally snap away mid-read. But that also traps scroll at
-// the column boundaries. Escape to adjacent rooms when the user tries to
-// scroll past the top or bottom of the column.
+// Room 03: plaque-left scrolls internally. overscroll-behavior:contain on
+// desktop prevents accidental room snaps mid-read; the wheel handler below
+// manually escapes to adjacent rooms at the column boundaries.
+// On mobile, overscroll-behavior:auto lets boundary swipes propagate to the
+// snap container naturally — no JS escape needed there.
 const plaqueLeft    = document.querySelector('.plaque-left')
 const snapContainer = document.querySelector('.snap-container')
 const room02        = document.getElementById('room-02')
@@ -32,8 +33,8 @@ if (plaqueLeft && snapContainer) {
   }, { passive: true })
 
   // Touch escape only needed on non-touch-primary devices (desktop trackpads
-  // with touch emulation). On mobile, plaque-left has overflow-y:hidden so
-  // the snap container handles swipes directly — no escape logic needed.
+  // with touch emulation). On mobile, overscroll-behavior:auto propagates
+  // boundary swipes to the snap container — no JS escape needed there.
   if (window.matchMedia('(hover: hover)').matches) {
     let touchStartY   = 0
     let touchAtTop    = false

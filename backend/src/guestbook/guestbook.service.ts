@@ -115,11 +115,16 @@ export class GuestbookService {
   }
 
   private async uploadImage(file: Express.Multer.File): Promise<string> {
-    const processed = await sharp(file.buffer)
-      .grayscale()
-      .resize({ width: 600, withoutEnlargement: true })
-      .jpeg({ quality: 72 })
-      .toBuffer()
+    let processed: Buffer
+    try {
+      processed = await sharp(file.buffer)
+        .grayscale()
+        .resize({ width: 600, withoutEnlargement: true })
+        .jpeg({ quality: 72 })
+        .toBuffer()
+    } catch {
+      throw new BadRequestException('Image could not be processed')
+    }
 
     const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
     const { error } = await this.supabase.client.storage

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A deadpan heritage/tourism site for "Finn's Landzunge" — a grassy lakeside promontory in Leipzig, Saxony. Presents a real Google Maps landmark as a genuine protected natural monument. The humor is in the straight-faced presentation. Rebuilt with 90s Geocities-inspired aesthetic: retro VT323 font accents, scanline texture, styled scrollbar, real guestbook (Supabase), and sound (dial-up modem on first click → ambient lake loop).
+A deadpan heritage/tourism site for "Finn's Landzunge" — a grassy lakeside promontory in Leipzig, Saxony. Presents a real Google Maps landmark as a genuine protected natural monument. The humor is in the straight-faced presentation. Built with an Avant-Garde Brutalist aesthetic: pure black/white/`#CCFF00` acid green, Inter Black 900 + Space Mono, 4-room scroll-snap experience.
 
 ## Commands
 
@@ -38,47 +38,50 @@ Services:
 **Vite + vanilla JS, no framework.** Deployed via GitHub Actions → GitHub Pages.
 
 ```
-src/
-  main.js       # entry: calls initI18n(), initSound(), initGuestbook()
-  i18n.js       # EN/DE language toggle (data-en/data-de attributes + localStorage)
-  sound.js      # dial-up on first click → ambient lake loop; toggle persists
-  guestbook.js  # Supabase read/write, DOM render, 1hr rate limit
-  supabase.js   # createClient() with VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
-public/sounds/
-  dialup.mp3         # gitignored — source from freesound.org
-  lake-ambient.mp3   # gitignored — source from freesound.org
+frontend/
+  index.html          # 4-room scroll-snap page
+  dispatches.html     # Field dispatches sub-page
+  style.css           # All styles — room sections clearly delimited by comments
+  src/
+    main.js           # entry: wires up room counter, plaque escape, guestbook, weather
+    guestbook.js      # canvas guestbook — hash-positioned entries, POST form
+    weather.js        # fetches live weather data, renders Room 02
+    room-counter.js   # IntersectionObserver-based room progress counter
+  public/
+    images/           # Room backgrounds: weather.jpg, sliver-1/2/3.jpg, dispatches-hero.jpg
 ```
 
-## i18n
+## Rooms
 
-All user-visible text has `data-en` and `data-de` attributes. English text is the visible fallback. `applyLang(lang)` in `i18n.js` swaps `innerHTML` on every `[data-en]`/`[data-de]` element, updates `<html lang>`, `document.title`, the toggle label, and persists to `localStorage`.
+- **Room 01** — Entrance: GPS coordinates as headline, blinking `[ ENTER EXHIBITION ]` CTA
+- **Room 02** — Weather Monument: screen-filling live WIND / TEMP / WATER data art
+- **Room 03** — Exhibition Plaque: two-column layout (scrollable text left, photo slivers right)
+- **Room 04** — Visitor Canvas: hash-positioned guestbook entries on black, expand-form strip
 
-**Important:** Vite's HTML parser (parse5) chokes on Unicode curly quotes (`"` `"` `„`) inside HTML attribute values. Use HTML entities instead: `&ldquo;` `&rdquo;` `&bdquo;`.
+## Guestbook
 
-## Guestbook (Supabase)
+Table: `guestbook_entries` (id uuid, name text, message text, created_at timestamptz, image_path text, image_approved bool). RLS: anon can SELECT + INSERT. Env vars needed: `VITE_API_URL` (frontend), `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (backend).
 
-Table: `guestbook_entries` (id uuid, name text, message text, created_at timestamptz). RLS: anon can SELECT + INSERT. Env vars needed: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — copy `.env.example` → `.env`. Add the same vars as GitHub repo secrets for the Actions deploy.
+**Image uploads** are handled by the backend only — there is no file input in the public form. Uploaded images are converted to greyscale JPEG (max 600px wide, 72% quality) via `sharp` before storage. Images require admin approval (`image_approved = true`) before appearing on the canvas.
 
-## Sound
-
-Both audio files must exist in `public/sounds/` for sound to work. Browser autoplay policy: first user click triggers dial-up, ambient follows after dial-up ends. Sound toggle at top-right persists via `localStorage`.
+Rate limit: 5 minutes between submissions (client-side `localStorage`).
 
 ## Design Conventions
 
-- **Palette:** background `#f8f5f0`, text `#2c2c2c`, accent/green `#4a5c4e`, muted `#5a5a5a`
-- **Fonts:** Playfair Display (headings), Georgia/serif (body), VT323 (retro accents: counter, timestamps, guestbook button)
-- **Layout:** centered, max-width 680px, thin `<hr class="divider">` between sections
+- **Palette:** background `#000`, text `#fff`, accent `#CCFF00` (acid green), muted `#888`
+- **Fonts:** Inter Black 900 (headings/display), Space Mono 400 (body/UI) — self-hosted via `@fontsource`
+- **Layout:** full-viewport rooms, scroll-snap, no max-width container
 - Tone: deadpan-serious heritage bureaucratic prose throughout
 
 ## Fonts
 
-Fonts are self-hosted via `@fontsource` npm packages (Orbitron, Rajdhani, VT323). Vite bundles the woff2 files at build time — no external font CDN requests. Do NOT add Google Fonts `<link>` tags or `@import url('fonts.googleapis.com/...')` back — loading fonts from Google's CDN sends user IPs to Google, which violates GDPR under German law (LG München ruling, Jan 2022).
+Fonts are self-hosted via `@fontsource` npm packages. Vite bundles the woff2 files at build time — no external font CDN requests. Do NOT add Google Fonts `<link>` tags or `@import url('fonts.googleapis.com/...')` back — loading fonts from Google's CDN sends user IPs to Google, which violates GDPR under German law (LG München ruling, Jan 2022).
 
 ## Privacy / GDPR
 
-- **No cookie banner needed:** `localStorage` is used only for language preference and sound toggle — both are strictly necessary functional storage, not tracking. EU ePrivacy Directive exempts these from consent requirements.
+- **No cookie banner needed:** `localStorage` is used only for functional storage (no tracking).
 - **No external tracking:** No analytics, ad pixels, or third-party cookies. Keep it this way.
-- **Self-hosted fonts:** See above. Any future third-party resource that phones home (fonts, analytics, embeds) needs GDPR evaluation before adding.
+- **Self-hosted fonts:** See above. Any future third-party resource that phones home needs GDPR evaluation before adding.
 
 ## Deployment
 

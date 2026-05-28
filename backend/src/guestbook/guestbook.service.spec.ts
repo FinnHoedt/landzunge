@@ -1,6 +1,15 @@
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common'
 import { GuestbookService } from './guestbook.service'
 
+const mockSharpBuffer = Buffer.from('fake-jpeg')
+const mockSharpChain = {
+  grayscale: jest.fn().mockReturnThis(),
+  resize: jest.fn().mockReturnThis(),
+  jpeg: jest.fn().mockReturnThis(),
+  toBuffer: jest.fn().mockResolvedValue(mockSharpBuffer),
+}
+jest.mock('sharp', () => jest.fn(() => mockSharpChain))
+
 const makeSupabase = () => ({
   client: {
     from: jest.fn(),
@@ -76,6 +85,37 @@ describe('GuestbookService', () => {
       const service = new GuestbookService(supabase as any, makeConfig() as any)
       await expect(
         service.createEntry({ name: 'fuck', message: 'hello' })
+      ).rejects.toThrow(BadRequestException)
+    })
+  })
+
+  describe('uploadImage (via createEntry)', () => {
+    it('uploads a .jpg with image/jpeg content-type after sharp processing', async () => {
+      const uploadMock = jest.fn().mockResolvedValue({ error: null })
+      const supabase = makeSupabase()
+      supabase.client.storage.from.mockReturnValue({ upload: uploadMock })
+      const insertChain = {
+        insert: jest.fn().mockResolvedValue({ error: null }),
+      }
+      supabase.client.from.mockReturnValue(insertChain)
+
+      const service = new GuestbookService(supabase as any, makeConfig() as any)
+      const fakeFile = { buffer: Buffer.from('img'), mimetype: 'image/png' } as Express.Multer.File
+      await service.createEntry({ name: 'Finn', message: 'Hello' }, fakeFile)
+
+      const [path, buffer, opts] = uploadMock.mock.calls[0]
+      expect(path).toMatch(/\.jpg$/)
+      expect(buffer).toBe(mockSharpBuffer)
+      expect(opts.contentType).toBe('image/jpeg')
+    })
+
+    it('throws BadRequestException when sharp fails', async () => {
+      mockSharpChain.toBuffer.mockRejectedValueOnce(new Error('corrupt'))
+      const supabase = makeSupabase()
+      const service = new GuestbookService(supabase as any, makeConfig() as any)
+      const fakeFile = { buffer: Buffer.from('bad'), mimetype: 'image/jpeg' } as Express.Multer.File
+      await expect(
+        service.createEntry({ name: 'Finn', message: 'Hello' }, fakeFile)
       ).rejects.toThrow(BadRequestException)
     })
   })

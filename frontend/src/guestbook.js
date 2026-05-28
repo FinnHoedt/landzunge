@@ -6,15 +6,14 @@ const RATE_LIMIT_MS  = 5 * 60 * 1000   // 5 minutes
 function hashId(str) {
   let h = 5381
   for (let i = 0; i < str.length; i++) {
-    h = Math.imul((h << 5) + h, 1) + str.charCodeAt(i)
-    h |= 0
+    h = ((h << 5) + h + str.charCodeAt(i)) | 0
   }
   return Math.abs(h)
 }
 
 function entryPosition(id) {
   const hash = hashId(id)
-  const left = (hash % 70) + 5        // 5% – 75%
+  const left = (hash % 55) + 5        // 5% – 60% — cap keeps entries from clipping on narrow viewports
   const top  = ((hash >> 4) % 70) + 5 // 5% – 75%
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
   const fontSize = sizes[hash % 4]
