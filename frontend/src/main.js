@@ -19,6 +19,7 @@ const room02        = document.getElementById('room-02')
 const room04        = document.getElementById('room-04')
 
 if (plaqueLeft && snapContainer) {
+  // Wheel (desktop/trackpad)
   plaqueLeft.addEventListener('wheel', (e) => {
     const atTop    = plaqueLeft.scrollTop === 0
     const atBottom = plaqueLeft.scrollTop + plaqueLeft.clientHeight >= plaqueLeft.scrollHeight - 1
@@ -26,6 +27,28 @@ if (plaqueLeft && snapContainer) {
     if (atTop && e.deltaY < 0 && room02) {
       snapContainer.scrollTo({ top: room02.offsetTop, behavior: 'smooth' })
     } else if (atBottom && e.deltaY > 0 && room04) {
+      snapContainer.scrollTo({ top: room04.offsetTop, behavior: 'smooth' })
+    }
+  }, { passive: true })
+
+  // Touch (mobile) — record boundary state at gesture start, escape on swipe
+  // past a 50px threshold. dy > 0 = swiped up = intent to scroll down.
+  let touchStartY  = 0
+  let touchAtTop   = false
+  let touchAtBottom = false
+
+  plaqueLeft.addEventListener('touchstart', (e) => {
+    touchStartY   = e.touches[0].clientY
+    touchAtTop    = plaqueLeft.scrollTop <= 1
+    touchAtBottom = plaqueLeft.scrollTop + plaqueLeft.clientHeight >= plaqueLeft.scrollHeight - 1
+  }, { passive: true })
+
+  plaqueLeft.addEventListener('touchend', (e) => {
+    const dy = touchStartY - e.changedTouches[0].clientY // >0 = swiped up
+
+    if (touchAtTop && dy < -50 && room02) {
+      snapContainer.scrollTo({ top: room02.offsetTop, behavior: 'smooth' })
+    } else if (touchAtBottom && dy > 50 && room04) {
       snapContainer.scrollTo({ top: room04.offsetTop, behavior: 'smooth' })
     }
   }, { passive: true })
