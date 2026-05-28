@@ -25,7 +25,7 @@ if (plaqueLeft && snapContainer) {
   // A reset timer clears the dwell count if scrolling stops mid-gesture.
   let overscrollStart = 0
   let overscrollReset = null
-  const DWELL_MS = 400
+  const DWELL_MS = 650
 
   plaqueLeft.addEventListener('wheel', (e) => {
     const atTop    = plaqueLeft.scrollTop <= 1
