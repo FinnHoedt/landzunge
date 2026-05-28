@@ -1,6 +1,6 @@
 # Finn's Landzunge
 
-A deadpan heritage and tourism site for [Finn's Landzunge](https://finnslandzunge.com) — a grassy lakeside promontory in Leipzig, Saxony, presented as a genuine protected natural monument. Built with a Brutalist aesthetic: black/white/`#CCFF00` acid green, scroll-snap rooms, live weather data.
+A deadpan heritage and tourism site for [Finn's Landzunge](https://finnslandzunge.com) — a grassy lakeside promontory in Leipzig, Saxony, presented as a genuine protected natural monument. Built with an Avant-Garde Brutalist aesthetic: black/white/`#CCFF00` acid green, scroll-snap rooms, live weather data.
 
 **Live site:** https://finnslandzunge.com
 
@@ -47,15 +47,24 @@ Adding or removing npm packages requires `docker compose down -v && docker compo
 
 ## Local development (without Docker)
 
+**Prerequisite:** create `backend/.env` from `backend/.env.example` and fill in real Supabase credentials. Set `VITE_API_URL=http://localhost:3000` in `frontend/.env`.
+
 Run each package individually:
 
 ```bash
-cd frontend && npm run dev      # dev server at localhost:5173
-cd frontend && npm run build    # production build → dist/
-cd frontend && npm run preview  # preview built output
-```
+# Frontend (localhost:5173)
+cd frontend && npm run dev
+cd frontend && npm run build
+cd frontend && npm run preview
 
-Same commands apply in `admin/` and `backend/`.
+# Admin (localhost:5174)
+cd admin && npm run dev
+
+# Backend API (localhost:3000)
+cd backend && npm run start:dev   # watch mode
+cd backend && npm run build       # compile
+cd backend && npm run start       # run compiled output
+```
 
 ---
 
