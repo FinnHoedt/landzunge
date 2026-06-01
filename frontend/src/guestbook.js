@@ -2,6 +2,9 @@ const API_URL = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
 const RATE_LIMIT_KEY = 'gb_last_submit'
 const RATE_LIMIT_MS  = 5 * 60 * 1000   // 5 minutes
 
+const ENTRY_MAX_WIDTH = 220  // px — must match `.canvas-entry { max-width }` in style.css
+const ENTRY_CLEARANCE = 16   // px — ~1rem right-edge breathing room
+
 // Deterministic hash of the entry UUID → number for stable positioning
 function hashId(str) {
   let h = 5381
@@ -13,8 +16,9 @@ function hashId(str) {
 
 function entryPosition(id) {
   const hash = hashId(id)
-  const rawLeft = (hash % 55) + 5
-  const maxLeft = Math.max(5, Math.floor(((window.innerWidth - 220 - 16) / window.innerWidth) * 100))
+  const rawLeft = (hash % 55) + 5     // 5% – 60% base spread
+  // Clamp so a max-width entry never spills past the right edge on narrow viewports
+  const maxLeft = Math.max(5, Math.floor(((window.innerWidth - ENTRY_MAX_WIDTH - ENTRY_CLEARANCE) / window.innerWidth) * 100))
   const left = Math.min(rawLeft, maxLeft)
   const top  = ((hash >> 4) % 70) + 5 // 5% – 75%
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
@@ -22,7 +26,10 @@ function entryPosition(id) {
   return { left, top, fontSize }
 }
 
+let lastEntries = []
+
 function renderEntries(entries) {
+  lastEntries = entries
   const container = document.getElementById('canvas-entries')
   if (!container) return
 
@@ -143,7 +150,20 @@ function esc(s) {
     .replace(/'/g, '&#39;')
 }
 
+function setupReflow() {
+  // entryPosition() clamps against window.innerWidth, so positions must be
+  // recomputed when the viewport changes (resize / phone rotation).
+  let raf = 0
+  const reflow = () => {
+    cancelAnimationFrame(raf)
+    raf = requestAnimationFrame(() => renderEntries(lastEntries))
+  }
+  window.addEventListener('resize', reflow)
+  window.addEventListener('orientationchange', reflow)
+}
+
 export async function initGuestbook() {
   await loadEntries()
   setupForm()
+  setupReflow()
 }
