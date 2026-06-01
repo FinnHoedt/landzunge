@@ -30,7 +30,11 @@ function renderEntries(entries) {
     return
   }
 
-  const newestId = entries[0]?.id  // API returns newest first
+  // Determine newest client-side so the highlight doesn't depend on API sort order
+  const newestId = entries.reduce(
+    (acc, e) => (!acc || new Date(e.created_at) > new Date(acc.created_at) ? e : acc),
+    null
+  )?.id
 
   container.innerHTML = entries.map(e => {
     const { left, top, fontSize } = entryPosition(e.id)
