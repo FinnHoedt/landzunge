@@ -5,6 +5,10 @@ const RATE_LIMIT_MS  = 5 * 60 * 1000   // 5 minutes
 const ENTRY_MAX_WIDTH = 220  // px — must match `.canvas-entry { max-width }` in style.css
 const ENTRY_CLEARANCE = 16   // px — ~1rem right-edge breathing room
 
+// Mirrors the backend FileInterceptor contract (POST /api/guestbook)
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024   // 5 MB
+
 // Deterministic hash of the entry UUID → number for stable positioning
 function hashId(str) {
   let h = 5381
@@ -39,7 +43,11 @@ function renderEntries(entries) {
     return
   }
 
-  const newestId = entries[0]?.id  // API returns newest first
+  // Determine newest client-side so the highlight doesn't depend on API sort order
+  const newestId = entries.reduce(
+    (acc, e) => (!acc || new Date(e.created_at) > new Date(acc.created_at) ? e : acc),
+    null
+  )?.id
 
   container.innerHTML = entries.map(e => {
     const { left, top, fontSize } = entryPosition(e.id)
@@ -75,8 +83,18 @@ function setupForm() {
   const expanded = document.getElementById('canvas-form-expanded')
   const form     = document.getElementById('canvas-form')
   const cancel   = document.getElementById('canvas-cancel')
+  const imageBtn   = document.getElementById('gb_image_btn')
+  const imageInput = document.getElementById('gb_image')
+  const imageName  = document.getElementById('gb_image_name')
 
   if (!strip || !expanded || !form) return
+
+  function resetImageLabel() {
+    if (imageName) {
+      imageName.textContent = 'NO FILE SELECTED'
+      imageName.classList.remove('has-file')
+    }
+  }
 
   function openForm() {
     strip.hidden = true
@@ -88,6 +106,7 @@ function setupForm() {
     expanded.hidden = true
     strip.hidden = false
     form.reset()
+    resetImageLabel()
   }
 
   strip.addEventListener('click', openForm)
@@ -95,6 +114,23 @@ function setupForm() {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openForm() }
   })
   cancel?.addEventListener('click', closeForm)
+
+  imageBtn?.addEventListener('click', () => imageInput?.click())
+  imageInput?.addEventListener('change', () => {
+    const file = imageInput.files[0]
+    if (!file) { resetImageLabel(); return }
+    const err = validateImage(file)
+    if (err) {
+      alert(err)
+      imageInput.value = ''
+      resetImageLabel()
+      return
+    }
+    if (imageName) {
+      imageName.textContent = file.name
+      imageName.classList.add('has-file')
+    }
+  })
 
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault()
@@ -109,12 +145,19 @@ function setupForm() {
     const message = form.gb_message.value.trim().slice(0, 280)
     if (!name || !message) return
 
+    const imageFile = imageInput?.files[0] ?? null
+    if (imageFile) {
+      const err = validateImage(imageFile)
+      if (err) { alert(err); return }
+    }
+
     const submitBtn = form.querySelector('.canvas-submit')
     if (submitBtn) submitBtn.disabled = true
 
     const formData = new FormData()
     formData.append('name', name)
     formData.append('message', message)
+    if (imageFile) formData.append('image', imageFile)
 
     try {
       const res = await fetch(`${API_URL}/api/guestbook`, {
@@ -139,6 +182,16 @@ function setupForm() {
     closeForm()
     await loadEntries()
   })
+}
+
+function validateImage(file) {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    return 'ONLY JPG, PNG, OR WEBP VISUALS ACCEPTED.'
+  }
+  if (file.size > MAX_IMAGE_BYTES) {
+    return 'VISUAL EXCEEDS 5MB LIMIT.'
+  }
+  return null
 }
 
 function esc(s) {

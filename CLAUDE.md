@@ -62,7 +62,7 @@ frontend/
 
 Table: `guestbook_entries` (id uuid, name text, message text, created_at timestamptz, image_path text, image_approved bool). RLS: anon can SELECT + INSERT. Env vars needed: `VITE_API_URL` (frontend), `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (backend).
 
-**Image uploads** are handled by the backend only — there is no file input in the public form. Uploaded images are converted to greyscale JPEG (max 600px wide, 72% quality) via `sharp` before storage. Images require admin approval (`image_approved = true`) before appearing on the canvas.
+**Image uploads**: the public Room 04 form has an optional image picker (`#gb_image`, field name `image`). The file is sent as multipart in the same `POST /api/guestbook` request and processed **server-side only** — the frontend never talks to Supabase storage directly. The backend converts uploads to greyscale JPEG (max 600px wide, 72% quality) via `sharp` before storage. Accepted types: JPG/PNG/WEBP, max 5 MB. Images require admin approval (`image_approved = true`) before appearing on the canvas.
 
 Rate limit: 5 minutes between submissions (client-side `localStorage`).
 

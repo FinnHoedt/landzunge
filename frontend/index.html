@@ -31,7 +31,7 @@
   </script>
   <title>Finn's Landzunge — Leipzig, Sachsen</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000'/><text y='24' font-size='24'>🏔</text></svg>" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
 </head>
 <body>
 
@@ -156,7 +156,7 @@
         <dt>MAP LINK</dt>
         <dd>
           <a class="plaque-link"
-             href="https://www.google.com/maps/place/Finn's+Landzunge/@51.3097009,12.3624668,13z/data=!4m6!3m5!1s0x47a6fb004174db55:0x11202b8ea125de6b!8m2!3d51.2614894!4d12.339342!16s%2Fg%2F11z5slxmbk"
+             href="https://www.google.de/maps/place/Finn's+Landzunge/@51.2630876,12.3398378,17.17z/data=!4m6!3m5!1s0x47a6fb001045c54d:0xd596263ead6ce785!8m2!3d51.2615578!4d12.339343!16s%2Fg%2F11npjndt3s?entry=ttu&g_ep=EgoyMDI2MDUyNy4wIKXMDSoASAFQAw%3D%3D"
              target="_blank" rel="noopener">
             &gt; OPEN MAP INTERFACE
           </a>
@@ -221,6 +221,12 @@
       <div class="canvas-form__field">
         <textarea id="gb_message" name="gb_message" maxlength="280" rows="3" required
                   placeholder="TRANSMISSION..." class="canvas-input"></textarea>
+      </div>
+      <div class="canvas-form__field canvas-image-picker">
+        <button type="button" id="gb_image_btn" class="canvas-image-btn">[ ATTACH VISUAL ]</button>
+        <span id="gb_image_name" class="canvas-image-name">NO FILE SELECTED</span>
+        <input id="gb_image" name="image" type="file" accept="image/jpeg,image/png,image/webp"
+               class="canvas-image-input" aria-label="Attach image" />
       </div>
       <div class="canvas-form__actions">
         <button type="submit" class="canvas-submit">[ UPLINK ]</button>
