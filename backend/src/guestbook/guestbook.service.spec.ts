@@ -90,6 +90,15 @@ describe('GuestbookService', () => {
   })
 
   describe('uploadImage (via createEntry)', () => {
+    beforeEach(() => {
+      // Reset the module-scoped sharp mock so per-test overrides (e.g.
+      // mockRejectedValueOnce below) can't leak into later tests.
+      mockSharpChain.toBuffer.mockReset().mockResolvedValue(mockSharpBuffer)
+      mockSharpChain.grayscale.mockClear()
+      mockSharpChain.resize.mockClear()
+      mockSharpChain.jpeg.mockClear()
+    })
+
     it('uploads a .jpg with image/jpeg content-type after sharp processing', async () => {
       const uploadMock = jest.fn().mockResolvedValue({ error: null })
       const supabase = makeSupabase()
@@ -111,6 +120,8 @@ describe('GuestbookService', () => {
 
     it('throws BadRequestException when sharp fails', async () => {
       mockSharpChain.toBuffer.mockRejectedValueOnce(new Error('corrupt'))
+      // No from(...).insert(...) mock is set up on purpose: sharp throws during
+      // image processing, so the flow never reaches the DB insert.
       const supabase = makeSupabase()
       const service = new GuestbookService(supabase as any, makeConfig() as any)
       const fakeFile = { buffer: Buffer.from('bad'), mimetype: 'image/jpeg' } as Express.Multer.File
