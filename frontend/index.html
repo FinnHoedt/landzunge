@@ -222,6 +222,12 @@
         <textarea id="gb_message" name="gb_message" maxlength="280" rows="3" required
                   placeholder="TRANSMISSION..." class="canvas-input"></textarea>
       </div>
+      <div class="canvas-form__field canvas-image-picker">
+        <button type="button" id="gb_image_btn" class="canvas-image-btn">[ ATTACH VISUAL ]</button>
+        <span id="gb_image_name" class="canvas-image-name">NO FILE SELECTED</span>
+        <input id="gb_image" name="image" type="file" accept="image/jpeg,image/png,image/webp"
+               class="canvas-image-input" aria-label="Attach image" />
+      </div>
       <div class="canvas-form__actions">
         <button type="submit" class="canvas-submit">[ UPLINK ]</button>
         <button type="button" id="canvas-cancel" class="canvas-cancel">[ CANCEL ]</button>
