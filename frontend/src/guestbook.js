@@ -20,16 +20,13 @@ function entryPosition(id) {
   const hashY = hashId(id + 'y')
   const hashS = hashId(id + 's')
   const left = (hashX % 85) + 5    // 5% – 90%, may bleed off right edge (intentional)
-  const top  = (hashY % 80) + 5    // 5% – 85%
+  const top  = (hashY % 80) + 5    // 5% – 84%
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
   const fontSize = sizes[hashS % 4]
   return { left, top, fontSize }
 }
 
-let lastEntries = []
-
 function renderEntries(entries) {
-  lastEntries = entries
   const container = document.getElementById('canvas-entries')
   if (!container) return
 
