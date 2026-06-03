@@ -1,4 +1,4 @@
-import"./style-2T4qWNt9.js";const s="https://api.finnslandzunge.com";async function n(){const t=document.getElementById("dispatches-list");if(t)try{const i=await fetch(`${s}/api/dispatches`);if(!i.ok)throw new Error;const c=await i.json();if(c.length===0){t.innerHTML='<p class="dispatch-empty">// NO DISPATCHES FILED. STANDBY.</p>';return}t.innerHTML=c.map(e=>`
+import"./style-CklJ_Ni7.js";const s="https://api.finnslandzunge.com";async function n(){const t=document.getElementById("dispatches-list");if(t)try{const i=await fetch(`${s}/api/dispatches`);if(!i.ok)throw new Error;const c=await i.json();if(c.length===0){t.innerHTML='<p class="dispatch-empty">// NO DISPATCHES FILED. STANDBY.</p>';return}t.innerHTML=c.map(e=>`
       <article class="dispatch-item">
         <time class="dispatch-item__date" datetime="${a(e.created_at)}">${r(e.created_at)}</time>
         <h2 class="dispatch-item__title">${a(e.title)}</h2>
