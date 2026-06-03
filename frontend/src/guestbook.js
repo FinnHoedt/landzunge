@@ -19,7 +19,12 @@ function entryPosition(id) {
   const hashX = hashId(id)
   const hashY = hashId(id + 'y')
   const hashS = hashId(id + 's')
-  const left = (hashX % 85) + 5    // 5% – 90%, may bleed off right edge (intentional)
+  const rawLeft = (hashX % 85) + 5  // 5–89
+  // Re-map into [5%, maxLeft] so spread is preserved on narrow viewports.
+  // Hard-clamping (the previous approach) collapsed all rawLeft > maxLeft to
+  // the same pixel column, creating a right-side cluster on mobile.
+  const maxLeft = Math.max(10, ((window.innerWidth - 220) / window.innerWidth) * 100)
+  const left = 5 + ((rawLeft - 5) / 84) * (maxLeft - 5)
   const top  = (hashY % 80) + 5    // 5% – 84%
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
   const fontSize = sizes[hashS % 4]
