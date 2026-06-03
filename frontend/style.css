@@ -116,7 +116,7 @@ body {
    ══════════════════════════════════════════════════ */
 
 .room__bg--entrance {
-  background-image: url('/images/hero.jpg');
+  /* background-image: url('/images/hero.jpg'); */
 }
 
 /* Visually hidden utility */
@@ -191,7 +191,7 @@ body {
    ══════════════════════════════════════════════════ */
 
 .room__bg--weather {
-  background-image: url('/images/weather.jpg');
+  /* background-image: url('/images/weather.jpg'); */
 }
 
 .room--weather .room__content {
