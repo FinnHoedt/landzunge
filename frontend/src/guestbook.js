@@ -19,14 +19,16 @@ function hashId(str) {
 }
 
 function entryPosition(id) {
-  const hash = hashId(id)
-  const rawLeft = (hash % 55) + 5     // 5% – 60% base spread
+  const hashX = hashId(id)
+  const hashY = hashId(id + 'y')
+  const hashS = hashId(id + 's')
+  const rawLeft = (hashX % 55) + 5    // 5% – 60% base spread
   // Clamp so a max-width entry never spills past the right edge on narrow viewports
   const maxLeft = Math.max(5, Math.floor(((window.innerWidth - ENTRY_MAX_WIDTH - ENTRY_CLEARANCE) / window.innerWidth) * 100))
   const left = Math.min(rawLeft, maxLeft)
-  const top  = ((hash >> 4) % 70) + 5 // 5% – 75%
+  const top  = (hashY % 70) + 5       // 5% – 75%, fully decorrelated from left
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
-  const fontSize = sizes[hash % 4]
+  const fontSize = sizes[hashS % 4]
   return { left, top, fontSize }
 }
 
