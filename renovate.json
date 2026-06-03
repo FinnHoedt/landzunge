@@ -7,25 +7,29 @@
   "rangeStrategy": "bump",
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@nestjs/"],
-      "groupName": "NestJS"
+      "groupName": "NestJS",
+      "matchPackageNames": [
+        "/^@nestjs//"
+      ]
     },
     {
-      "matchPackageNames": ["react", "react-dom"],
-      "matchPackagePatterns": ["^@types/react"],
+      "matchPackageNames": ["react", "react-dom", "/^@types/react/"],
       "groupName": "React"
     },
     {
-      "matchPackagePatterns": ["^@tiptap/"],
-      "groupName": "Tiptap"
+      "groupName": "Tiptap",
+      "matchPackageNames": [
+        "/^@tiptap//"
+      ]
     },
     {
-      "matchPackagePatterns": ["^@fontsource/"],
-      "groupName": "Fontsource"
+      "groupName": "Fontsource",
+      "matchPackageNames": [
+        "/^@fontsource//"
+      ]
     },
     {
-      "matchPackageNames": ["vite"],
-      "matchPackagePatterns": ["^@vitejs/"],
+      "matchPackageNames": ["vite", "/^@vitejs//"],
       "groupName": "Vite"
     },
   ]
