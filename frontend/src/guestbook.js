@@ -1,4 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
+let _entries = []  // cached for resize re-renders
 const RATE_LIMIT_KEY = 'gb_last_submit'
 const RATE_LIMIT_MS  = 5 * 60 * 1000   // 5 minutes
 
@@ -19,7 +20,13 @@ function entryPosition(id) {
   const hashX = hashId(id)
   const hashY = hashId(id + 'y')
   const hashS = hashId(id + 's')
-  const left = (hashX % 85) + 5    // 5% – 90%, may bleed off right edge (intentional)
+  const rawLeft = (hashX % 85) + 5  // 5–89 (range = 84, i.e. 85 − 1)
+  // Re-map into [5%, maxLeft] so spread is preserved on narrow viewports.
+  // Hard-clamping (the previous approach) collapsed all rawLeft > maxLeft to
+  // the same pixel column, creating a right-side cluster on mobile.
+  // 220 mirrors .canvas-entry { max-width: 220px } — keep in sync if that changes.
+  const maxLeft = Math.max(10, ((window.innerWidth - 220) / window.innerWidth) * 100)
+  const left = 5 + ((rawLeft - 5) / 84) * (maxLeft - 5)  // 84 = rawLeft range (89 − 5)
   const top  = (hashY % 80) + 5    // 5% – 84%
   const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
   const fontSize = sizes[hashS % 4]
@@ -64,8 +71,8 @@ async function loadEntries() {
   try {
     const res = await fetch(`${API_URL}/api/guestbook`)
     if (!res.ok) throw new Error()
-    const entries = await res.json()
-    renderEntries(entries)
+    _entries = await res.json()
+    renderEntries(_entries)
   } catch {
     renderEntries([])
   }
@@ -199,4 +206,9 @@ function esc(s) {
 export async function initGuestbook() {
   await loadEntries()
   setupForm()
+  let resizeTimer
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer)
+    resizeTimer = setTimeout(() => renderEntries(_entries), 150)
+  })
 }
