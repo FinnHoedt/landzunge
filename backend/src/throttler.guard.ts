@@ -22,7 +22,7 @@ export class ProxyAwareThrottlerGuard extends ThrottlerGuard {
     throttlerLimitDetail: ThrottlerLimitDetail,
   ): Promise<void> {
     const req = context.switchToHttp().getRequest<Request>()
-    const ip = req.headers['cf-connecting-ip'] ?? req.ip ?? 'unknown'
+    const ip = await this.getTracker(req)
     this.logger.warn(
       { ip, path: req.path, limit: throttlerLimitDetail.limit, ttl: throttlerLimitDetail.ttl },
       'request rate-limited',
