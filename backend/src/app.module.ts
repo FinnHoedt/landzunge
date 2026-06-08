@@ -3,6 +3,9 @@ import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { CacheModule } from '@nestjs/cache-manager'
+import { LoggerModule } from 'nestjs-pino'
+import { randomUUID } from 'crypto'
+import type { IncomingMessage } from 'http'
 import { ProxyAwareThrottlerGuard } from './throttler.guard'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
@@ -15,9 +18,27 @@ import { WeatherModule } from './weather/weather.module'
 import { HealthController } from './health.controller'
 import { SpaController } from './admin/spa.controller'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: isProd ? 'info' : 'debug',
+        transport: isProd
+          ? undefined
+          : { target: 'pino-pretty', options: { colorize: true, singleLine: true } },
+        genReqId: (req) => {
+          const existing = req.headers['x-request-id']
+          if (existing) return Array.isArray(existing) ? existing[0] : existing
+          return randomUUID()
+        },
+        autoLogging: {
+          ignore: (req: IncomingMessage) => req.url === '/api/health',
+        },
+      },
+    }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
     CacheModule.register({ isGlobal: true }),
     ServeStaticModule.forRoot({

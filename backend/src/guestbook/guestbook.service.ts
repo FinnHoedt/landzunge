@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -12,6 +13,8 @@ import { CreateEntryDto } from './dto/create-entry.dto'
 
 @Injectable()
 export class GuestbookService {
+  private readonly logger = new Logger(GuestbookService.name)
+
   constructor(
     private supabase: SupabaseService,
     private config: ConfigService,
@@ -64,12 +67,14 @@ export class GuestbookService {
 
   async createEntry(dto: CreateEntryDto, file?: Express.Multer.File) {
     if (profanity.check(dto.name) || profanity.check(dto.message)) {
+      this.logger.warn({ name: dto.name }, 'guestbook submission blocked by profanity filter')
       throw new BadRequestException('Please keep entries respectful.')
     }
 
     let image_path: string | null = null
     if (file) {
       image_path = await this.uploadImage(file)
+      this.logger.log({ image_path }, 'guestbook image uploaded')
     }
 
     const { error } = await this.supabase.client
@@ -82,8 +87,11 @@ export class GuestbookService {
           .from('guestbook-images')
           .remove([image_path])
       }
+      this.logger.warn({ name: dto.name, err: error }, 'guestbook db insert failed')
       throw new InternalServerErrorException('Failed to submit entry')
     }
+
+    this.logger.log({ name: dto.name, hasImage: !!image_path }, 'guestbook entry submitted')
   }
 
   async approveImage(id: string) {
@@ -122,7 +130,8 @@ export class GuestbookService {
         .resize({ width: 600, withoutEnlargement: true })
         .jpeg({ quality: 72 })
         .toBuffer()
-    } catch {
+    } catch (err) {
+      this.logger.error({ err }, 'sharp image processing failed')
       throw new BadRequestException('Image could not be processed')
     }
 
@@ -130,7 +139,10 @@ export class GuestbookService {
     const { error } = await this.supabase.client.storage
       .from('guestbook-images')
       .upload(path, processed, { contentType: 'image/jpeg', upsert: false })
-    if (error) throw new InternalServerErrorException('Image upload failed')
+    if (error) {
+      this.logger.warn({ err: error }, 'guestbook image storage upload failed')
+      throw new InternalServerErrorException('Image upload failed')
+    }
     return path
   }
 }

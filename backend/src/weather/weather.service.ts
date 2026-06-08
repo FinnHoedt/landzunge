@@ -1,9 +1,9 @@
-import { Injectable, BadGatewayException, Inject } from '@nestjs/common'
+import { Injectable, BadGatewayException, Inject, Logger } from '@nestjs/common'
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager'
 
 const LAT = 51.2614894
 const LON = 12.339342
-const FORECAST_TTL = 60 * 60 * 1000      // 1h in ms (cache-manager v7 uses ms)
+const FORECAST_TTL = 60 * 60 * 1000       // 1h in ms (cache-manager v7 uses ms)
 const WATER_TEMP_TTL = 3 * 60 * 60 * 1000 // 3h in ms
 
 export interface WeatherData {
@@ -19,6 +19,8 @@ type ForecastData = Omit<WeatherData, 'water_temperature'>
 
 @Injectable()
 export class WeatherService {
+  private readonly logger = new Logger(WeatherService.name)
+
   constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
 
   async getWeather(): Promise<WeatherData> {
@@ -39,8 +41,14 @@ export class WeatherService {
       `&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m` +
       `&wind_speed_unit=kmh&timezone=Europe/Berlin`
 
-    const res = await fetch(url).catch(() => null)
-    if (!res?.ok) throw new BadGatewayException('weather fetch failed')
+    const res = await fetch(url).catch((err: unknown) => {
+      this.logger.warn({ err }, 'open-meteo forecast fetch failed')
+      return null
+    })
+    if (!res?.ok) {
+      if (res) this.logger.warn({ status: res.status }, 'open-meteo forecast returned non-OK status')
+      throw new BadGatewayException('weather fetch failed')
+    }
 
     const data = await res.json()
     const c = data.current
@@ -62,12 +70,16 @@ export class WeatherService {
 
     try {
       const res = await fetch('https://api.openmeteo.com/observations/openmeteo/1001/t2')
-      if (!res.ok) return null
+      if (!res.ok) {
+        this.logger.warn({ status: res.status }, 'water temp API returned non-OK status')
+        return null
+      }
       const data: [number, number] = await res.json()
       const temp = data[1]
       await this.cache.set('weather:water_temp', temp, WATER_TEMP_TTL)
       return temp
-    } catch {
+    } catch (err) {
+      this.logger.warn({ err }, 'water temp fetch failed')
       return null
     }
   }
