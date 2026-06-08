@@ -1,12 +1,14 @@
 import 'reflect-metadata'
 import { NestFactory } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
-import { ValidationPipe } from '@nestjs/common'
+import { ValidationPipe, Logger } from '@nestjs/common'
 import helmet from 'helmet'
+import { Logger as PinoLogger } from 'nestjs-pino'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true })
+  app.useLogger(app.get(PinoLogger))
   app.set('trust proxy', 1)
 
   const origins = process.env.CORS_ORIGINS
@@ -49,7 +51,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3000
   await app.listen(port)
-  console.log(`Backend listening on port ${port}`)
+  new Logger('Bootstrap').log(`Backend listening on port ${port}`)
 }
 
 bootstrap()
