@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import GuestbookPage from './pages/GuestbookPage'
 import DispatchesPage from './pages/DispatchesPage'
 import EditorPage from './pages/EditorPage'
+import UsersPage from './pages/UsersPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 
@@ -22,6 +23,9 @@ export default function App() {
         } />
         <Route path="/dispatches/:id/edit" element={
           <ProtectedRoute><Layout><EditorPage /></Layout></ProtectedRoute>
+        } />
+        <Route path="/users" element={
+          <ProtectedRoute requiredRole="super_admin"><Layout><UsersPage /></Layout></ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/guestbook" />} />
       </Routes>
