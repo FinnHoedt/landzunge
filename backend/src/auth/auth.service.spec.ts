@@ -9,28 +9,51 @@ function mockSupabaseAuth(session: any = null, error: any = null) {
   mockCreateClient.mockReturnValue({
     auth: {
       signInWithPassword: jest.fn().mockResolvedValue({
-        data: { session, user: session ? { email: 'admin@test.com' } : null },
+        data: {
+          session,
+          user: session ? { id: 'user-1', email: 'admin@test.com' } : null,
+        },
         error,
       }),
     },
   })
 }
 
+const makeMockSupabase = (roleData: { roles: { name: string } } | null = { roles: { name: 'admin' } }) => ({
+  client: {
+    from: jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({ data: roleData }),
+        }),
+      }),
+    }),
+  },
+})
+
 describe('AuthService', () => {
   describe('login', () => {
-    it('returns token on valid credentials', async () => {
+    it('returns token and role on valid credentials', async () => {
       const session = { access_token: 'tok', expires_at: 9999 }
       mockSupabaseAuth(session)
-      const service = new AuthService(null as any)
+      const service = new AuthService(makeMockSupabase() as any)
       const result = await service.login('admin@test.com', 'pass')
       expect(result.access_token).toBe('tok')
       expect(result.user.email).toBe('admin@test.com')
+      expect(result.user.role).toBe('admin')
     })
 
-    it('throws UnauthorizedException on invalid credentials', async () => {
+    it('throws UnauthorizedException on invalid Supabase credentials', async () => {
       mockSupabaseAuth(null, new Error('Invalid'))
-      const service = new AuthService(null as any)
+      const service = new AuthService(makeMockSupabase() as any)
       await expect(service.login('bad@test.com', 'wrong')).rejects.toThrow(UnauthorizedException)
+    })
+
+    it('throws UnauthorizedException when user has no user_roles row', async () => {
+      const session = { access_token: 'tok', expires_at: 9999 }
+      mockSupabaseAuth(session)
+      const service = new AuthService(makeMockSupabase(null) as any)
+      await expect(service.login('notadmin@test.com', 'pass')).rejects.toThrow(UnauthorizedException)
     })
   })
 })
