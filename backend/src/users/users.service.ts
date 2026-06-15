@@ -31,7 +31,7 @@ export class UsersService {
     const { data: { users }, error: listError } = await this.supabase.client.auth.admin.listUsers({ perPage: 1000 })
     if (listError) throw new BadRequestException(listError.message)
 
-    const authUser = users.find((u: any) => u.email === email)
+    const authUser = users.find((u: any) => u.email === email.toLowerCase())
     if (!authUser) throw new NotFoundException(`No auth user with email ${email}`)
 
     const { data: roleRow, error: roleError } = await this.supabase.client

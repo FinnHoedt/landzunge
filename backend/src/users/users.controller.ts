@@ -52,7 +52,9 @@ export class UsersController {
   updateRole(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateRoleDto,
+    @Request() req: any,
   ) {
+    if (req.user.id === id) throw new BadRequestException('Cannot change your own role')
     return this.usersService.updateRole(id, dto.role)
   }
 
