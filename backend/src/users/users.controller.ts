@@ -49,6 +49,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @HttpCode(204)
   updateRole(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateRoleDto,

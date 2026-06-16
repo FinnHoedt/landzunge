@@ -1,4 +1,7 @@
-import { UnauthorizedException } from '@nestjs/common'
+import {
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { createClient } from '@supabase/supabase-js'
 import { AuthService } from './auth.service'
 
@@ -19,12 +22,15 @@ function mockSupabaseAuth(session: any = null, error: any = null) {
   })
 }
 
-const makeMockSupabase = (roleData: { roles: { name: string } } | null = { roles: { name: 'admin' } }) => ({
+const makeMockSupabase = (
+  roleData: { roles: { name: string } } | null = { roles: { name: 'admin' } },
+  roleError: any = null,
+) => ({
   client: {
     from: jest.fn().mockReturnValue({
       select: jest.fn().mockReturnValue({
         eq: jest.fn().mockReturnValue({
-          single: jest.fn().mockResolvedValue({ data: roleData }),
+          maybeSingle: jest.fn().mockResolvedValue({ data: roleData, error: roleError }),
         }),
       }),
     }),
@@ -54,6 +60,13 @@ describe('AuthService', () => {
       mockSupabaseAuth(session)
       const service = new AuthService(makeMockSupabase(null) as any)
       await expect(service.login('notadmin@test.com', 'pass')).rejects.toThrow(UnauthorizedException)
+    })
+
+    it('throws InternalServerErrorException when the role lookup errors', async () => {
+      const session = { access_token: 'tok', expires_at: 9999 }
+      mockSupabaseAuth(session)
+      const service = new AuthService(makeMockSupabase(null, { message: 'db down' }) as any)
+      await expect(service.login('admin@test.com', 'pass')).rejects.toThrow(InternalServerErrorException)
     })
   })
 })

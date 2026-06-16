@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
@@ -34,6 +35,13 @@ export class UsersService {
     const authUser = users.find((u: any) => u.email === email.toLowerCase())
     if (!authUser) throw new NotFoundException(`No auth user with email ${email}`)
 
+    const { data: existing } = await this.supabase.client
+      .from('user_roles')
+      .select('user_id')
+      .eq('user_id', authUser.id)
+      .maybeSingle()
+    if (existing) throw new ConflictException('User already has a role')
+
     const { data: roleRow, error: roleError } = await this.supabase.client
       .from('roles')
       .select('id')
@@ -46,7 +54,7 @@ export class UsersService {
       .insert({ user_id: authUser.id, role_id: (roleRow as any).id })
     if (error) throw new BadRequestException(error.message)
 
-    return { id: authUser.id, email, role: roleName }
+    return { id: authUser.id, email: authUser.email, role: roleName }
   }
 
   async updateRole(userId: string, roleName: string) {

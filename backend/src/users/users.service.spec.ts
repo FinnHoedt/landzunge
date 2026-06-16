@@ -1,4 +1,8 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common'
 import { UsersService } from './users.service'
 
 describe('UsersService', () => {
@@ -48,6 +52,30 @@ describe('UsersService', () => {
       }
       const service = new UsersService(mockSupabase as any)
       await expect(service.add('missing@test.com', 'admin')).rejects.toThrow(NotFoundException)
+    })
+
+    it('throws ConflictException when user already has a role', async () => {
+      const mockSupabase = {
+        client: {
+          from: jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                maybeSingle: jest.fn().mockResolvedValue({ data: { user_id: 'uid-1' }, error: null }),
+              }),
+            }),
+          }),
+          auth: {
+            admin: {
+              listUsers: jest.fn().mockResolvedValue({
+                data: { users: [{ id: 'uid-1', email: 'user@test.com' }] },
+                error: null,
+              }),
+            },
+          },
+        },
+      }
+      const service = new UsersService(mockSupabase as any)
+      await expect(service.add('user@test.com', 'admin')).rejects.toThrow(ConflictException)
     })
   })
 

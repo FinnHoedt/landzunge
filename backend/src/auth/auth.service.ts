@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { createClient } from '@supabase/supabase-js'
 import { SupabaseService } from '../supabase/supabase.service'
 
@@ -18,11 +22,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials')
     }
 
-    const { data: roleData } = await this.supabase.client
+    const { data: roleData, error: roleError } = await this.supabase.client
       .from('user_roles')
       .select('roles(name)')
       .eq('user_id', data.user.id)
-      .single()
+      .maybeSingle()
+
+    if (roleError) {
+      throw new InternalServerErrorException('Could not verify user role')
+    }
 
     if (!roleData) {
       throw new UnauthorizedException('Invalid credentials')
