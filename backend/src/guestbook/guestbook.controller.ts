@@ -29,7 +29,7 @@ export class GuestbookController {
 
   @Get('admin/all')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'moderator')
   getAllAdmin() {
     return this.service.getAllAdmin()
   }
@@ -64,7 +64,7 @@ export class GuestbookController {
 
   @Patch(':id/approve-image')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'moderator')
   approveImage(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.approveImage(id)
   }
@@ -72,7 +72,7 @@ export class GuestbookController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'moderator')
   deleteEntry(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.deleteEntry(id)
   }

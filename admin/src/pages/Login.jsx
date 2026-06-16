@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
+import { landingPath } from '../lib/roles'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -14,8 +15,8 @@ export default function Login() {
     setError('')
     setLoading(true)
     try {
-      await api.login(email, password)
-      navigate('/guestbook')
+      const data = await api.login(email, password)
+      navigate(landingPath(data.user.role))
     } catch (err) {
       setError(err.message ?? 'Login failed')
     } finally {

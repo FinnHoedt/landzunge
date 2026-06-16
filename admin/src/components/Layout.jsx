@@ -1,8 +1,10 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { api, getRole } from '../lib/api'
+import { canAccess } from '../lib/roles'
 
 export default function Layout({ children }) {
   const navigate = useNavigate()
+  const role = getRole()
 
   function handleLogout() {
     api.logout()
@@ -17,9 +19,13 @@ export default function Layout({ children }) {
       <aside className="w-[200px] bg-slate-800 text-slate-300 p-6 flex-shrink-0 flex flex-col">
         <h1 className="text-xs font-semibold text-white mb-6 tracking-widest uppercase">Landzunge</h1>
         <nav className="flex flex-col gap-1">
-          <NavLink to="/guestbook" className={linkClass}>Guestbook</NavLink>
-          <NavLink to="/dispatches" className={linkClass}>Dispatches</NavLink>
-          {getRole() === 'super_admin' && (
+          {canAccess('guestbook', role) && (
+            <NavLink to="/guestbook" className={linkClass}>Guestbook</NavLink>
+          )}
+          {canAccess('dispatches', role) && (
+            <NavLink to="/dispatches" className={linkClass}>Dispatches</NavLink>
+          )}
+          {canAccess('users', role) && (
             <NavLink to="/users" className={linkClass}>Users</NavLink>
           )}
         </nav>

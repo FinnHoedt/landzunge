@@ -28,7 +28,7 @@ export class DispatchesController {
 
   @Get('admin/all')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'editor')
   getAllAdmin() {
     return this.service.getAllAdmin()
   }
@@ -41,14 +41,14 @@ export class DispatchesController {
   @Post()
   @HttpCode(201)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'editor')
   create(@Body() dto: CreateDispatchDto) {
     return this.service.create(dto)
   }
 
   @Patch(':id')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'editor')
   update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateDispatchDto) {
     return this.service.update(id, dto)
   }
@@ -56,7 +56,7 @@ export class DispatchesController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
-  @Roles('admin', 'super_admin')
+  @Roles('admin', 'super_admin', 'editor')
   delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.delete(id)
   }

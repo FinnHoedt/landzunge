@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { api, getEmail } from '../lib/api'
-
-const ROLES = ['admin', 'super_admin']
+import { ROLE_NAMES as ROLES } from '../lib/roles'
 
 export default function UsersPage() {
   const [users, setUsers] = useState([])
@@ -11,6 +10,7 @@ export default function UsersPage() {
   const [addRole, setAddRole] = useState('admin')
   const [addError, setAddError] = useState('')
   const [addLoading, setAddLoading] = useState(false)
+  const [createdCreds, setCreatedCreds] = useState(null)
   const currentEmail = getEmail()
 
   useEffect(() => {
@@ -43,10 +43,11 @@ export default function UsersPage() {
     setAddError('')
     setAddLoading(true)
     try {
-      const user = await api.addUser(addEmail, addRole)
+      const { password, ...user } = await api.addUser(addEmail, addRole)
       setUsers(prev => [...prev, user])
       setAddEmail('')
       setAddRole('admin')
+      setCreatedCreds(password ? { email: user.email, password } : null)
     } catch (err) {
       setAddError(err.message)
     } finally {
@@ -60,6 +61,36 @@ export default function UsersPage() {
     <div>
       <h2 className="text-xl font-semibold mb-6">Users</h2>
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+
+      {createdCreds && (
+        <div className="mb-6 border border-green-300 bg-green-50 rounded p-4 text-sm">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="font-semibold text-green-800 mb-1">Account created for {createdCreds.email}</p>
+              <p className="text-slate-600 mb-2">
+                Save this password now — it won't be shown again. Share it with the new user over a secure channel.
+              </p>
+              <code className="block bg-white border border-slate-300 rounded px-2 py-1 font-mono text-slate-800 break-all">
+                {createdCreds.password}
+              </code>
+            </div>
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <button
+                onClick={() => navigator.clipboard?.writeText(createdCreds.password)}
+                className="text-xs border border-slate-300 rounded px-2 py-1 hover:bg-slate-100 cursor-pointer"
+              >
+                Copy
+              </button>
+              <button
+                onClick={() => setCreatedCreds(null)}
+                className="text-xs text-slate-500 hover:underline cursor-pointer"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <table className="w-full text-sm mb-8">
         <thead>

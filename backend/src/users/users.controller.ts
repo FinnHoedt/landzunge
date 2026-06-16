@@ -18,16 +18,18 @@ import { Roles } from '../auth/roles.decorator'
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard'
 import { UsersService } from './users.service'
 
+const ROLE_NAMES = ['admin', 'super_admin', 'moderator', 'editor']
+
 class AddUserDto {
   @IsEmail()
   email: string
 
-  @IsIn(['admin', 'super_admin'])
+  @IsIn(ROLE_NAMES)
   role: string
 }
 
 class UpdateRoleDto {
-  @IsIn(['admin', 'super_admin'])
+  @IsIn(ROLE_NAMES)
   role: string
 }
 
