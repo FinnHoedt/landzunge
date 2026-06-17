@@ -18,6 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Throttle } from '@nestjs/throttler'
 import { memoryStorage } from 'multer'
 import { AdminGuard } from '../auth/admin.guard'
+import { Roles } from '../auth/roles.decorator'
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard'
 import { GuestbookService } from './guestbook.service'
 import { CreateEntryDto } from './dto/create-entry.dto'
@@ -28,6 +29,7 @@ export class GuestbookController {
 
   @Get('admin/all')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'moderator')
   getAllAdmin() {
     return this.service.getAllAdmin()
   }
@@ -62,6 +64,7 @@ export class GuestbookController {
 
   @Patch(':id/approve-image')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'moderator')
   approveImage(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.approveImage(id)
   }
@@ -69,6 +72,7 @@ export class GuestbookController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'moderator')
   deleteEntry(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.deleteEntry(id)
   }

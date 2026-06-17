@@ -1,6 +1,8 @@
 const BASE = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
 const TOKEN_KEY = 'admin_token'
 const TOKEN_EXPIRY_KEY = 'admin_token_expires_at'
+const ROLE_KEY = 'admin_role'
+const EMAIL_KEY = 'admin_email'
 
 export function getToken() {
   const token = localStorage.getItem(TOKEN_KEY)
@@ -17,6 +19,30 @@ export function setToken(access_token, expires_at) {
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(TOKEN_EXPIRY_KEY)
+}
+
+export function getRole() {
+  return localStorage.getItem(ROLE_KEY)
+}
+
+export function setRole(role) {
+  localStorage.setItem(ROLE_KEY, role)
+}
+
+export function clearRole() {
+  localStorage.removeItem(ROLE_KEY)
+}
+
+export function getEmail() {
+  return localStorage.getItem(EMAIL_KEY)
+}
+
+export function setEmail(email) {
+  localStorage.setItem(EMAIL_KEY, email)
+}
+
+export function clearEmail() {
+  localStorage.removeItem(EMAIL_KEY)
 }
 
 async function authFetch(path, options = {}) {
@@ -50,11 +76,15 @@ export const api = {
     }
     const data = await res.json()
     setToken(data.access_token, data.expires_at)
+    setRole(data.user.role)
+    setEmail(data.user.email)
     return data
   },
 
   logout: () => {
     clearToken()
+    clearRole()
+    clearEmail()
   },
 
   getGuestbookAdmin: () => authFetch('/api/guestbook/admin/all'),
@@ -65,4 +95,9 @@ export const api = {
   createDispatch: (data) => authFetch('/api/dispatches', { method: 'POST', body: JSON.stringify(data) }),
   updateDispatch: (id, data) => authFetch(`/api/dispatches/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteDispatch: (id) => authFetch(`/api/dispatches/${id}`, { method: 'DELETE' }),
+
+  getUsers: () => authFetch('/api/users'),
+  addUser: (email, role) => authFetch('/api/users', { method: 'POST', body: JSON.stringify({ email, role }) }),
+  updateUserRole: (id, role) => authFetch(`/api/users/${id}`, { method: 'PATCH', body: JSON.stringify({ role }) }),
+  removeUser: (id) => authFetch(`/api/users/${id}`, { method: 'DELETE' }),
 }

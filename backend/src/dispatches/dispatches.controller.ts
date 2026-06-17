@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { AdminGuard } from '../auth/admin.guard'
+import { Roles } from '../auth/roles.decorator'
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard'
 import { DispatchesService } from './dispatches.service'
 import { CreateDispatchDto } from './dto/create-dispatch.dto'
@@ -27,6 +28,7 @@ export class DispatchesController {
 
   @Get('admin/all')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'editor')
   getAllAdmin() {
     return this.service.getAllAdmin()
   }
@@ -39,12 +41,14 @@ export class DispatchesController {
   @Post()
   @HttpCode(201)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'editor')
   create(@Body() dto: CreateDispatchDto) {
     return this.service.create(dto)
   }
 
   @Patch(':id')
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'editor')
   update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateDispatchDto) {
     return this.service.update(id, dto)
   }
@@ -52,6 +56,7 @@ export class DispatchesController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(SupabaseAuthGuard, AdminGuard)
+  @Roles('admin', 'super_admin', 'editor')
   delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.delete(id)
   }

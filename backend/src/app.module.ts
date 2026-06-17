@@ -15,6 +15,7 @@ import { GuestbookModule } from './guestbook/guestbook.module'
 import { DispatchesModule } from './dispatches/dispatches.module'
 import { TrackerModule } from './tracker/tracker.module'
 import { WeatherModule } from './weather/weather.module'
+import { UsersModule } from './users/users.module'
 import { HealthController } from './health.controller'
 import { SpaController } from './admin/spa.controller'
 
@@ -53,6 +54,7 @@ const isProd = process.env.NODE_ENV === 'production'
     DispatchesModule,
     TrackerModule,
     WeatherModule,
+    UsersModule,
   ],
   controllers: [HealthController, SpaController],
   providers: [{ provide: APP_GUARD, useClass: ProxyAwareThrottlerGuard }],
