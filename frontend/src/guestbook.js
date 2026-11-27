@@ -1,5 +1,8 @@
+import { computeCanvasLayout, entryFontSize } from './canvas-layout.js'
+
 const API_URL = import.meta.env.VITE_API_URL ?? 'https://api.finnslandzunge.com'
-let _entries = []  // cached for resize re-renders
+let _entries = []
+let _layoutRaf = 0
 const RATE_LIMIT_KEY = 'gb_last_submit'
 const RATE_LIMIT_MS  = 5 * 60 * 1000   // 5 minutes
 
@@ -7,30 +10,65 @@ const RATE_LIMIT_MS  = 5 * 60 * 1000   // 5 minutes
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024   // 5 MB
 
-// Deterministic hash of the entry UUID → number for stable positioning
-function hashId(str) {
-  let h = 5381
-  for (let i = 0; i < str.length; i++) {
-    h = ((h << 5) + h + str.charCodeAt(i)) | 0
+// Placeholder height reserved while an entry's thumbnail is still downloading;
+// replaced with the real measured height once the image fires load/error.
+const PENDING_IMAGE_HEIGHT_PX = 80
+
+function layoutEntries() {
+  const container = document.getElementById('canvas-entries')
+  if (!container) return
+
+  const nodes = Array.from(container.querySelectorAll('.canvas-entry'))
+  if (nodes.length === 0) {
+    container.style.setProperty('--canvas-height', '0px')
+    return
   }
-  return Math.abs(h)
+
+  const containerWidth = container.clientWidth
+  const containerHeight = container.clientHeight
+  if (containerWidth === 0 || containerHeight === 0) return
+
+  // Anchor at (0, 0) before measuring so entries near the right edge are never
+  // shrink-to-fit narrower than their true natural width (up to max-width).
+  for (const el of nodes) {
+    el.style.left = '0px'
+    el.style.top = '0px'
+  }
+
+  const items = nodes.map(el => {
+    const rect = el.getBoundingClientRect()
+    const img = el.querySelector('.canvas-entry-image')
+    const pendingImgExtra = img && !img.complete ? PENDING_IMAGE_HEIGHT_PX : 0
+    return {
+      id: el.dataset.entryId,
+      createdAt: Number(el.dataset.createdAt) || 0,
+      width: Math.ceil(rect.width),
+      height: Math.ceil(rect.height) + pendingImgExtra,
+    }
+  })
+
+  const { positions, canvasHeight, overflowed } = computeCanvasLayout(items, {
+    containerWidth,
+    containerHeight,
+  })
+
+  for (const el of nodes) {
+    const pos = positions.get(el.dataset.entryId)
+    if (pos) {
+      el.style.left = `${pos.x}px`
+      el.style.top = `${pos.y}px`
+    }
+  }
+
+  container.style.setProperty('--canvas-height', overflowed ? `${canvasHeight}px` : '0px')
 }
 
-function entryPosition(id) {
-  const hashX = hashId(id)
-  const hashY = hashId(id + 'y')
-  const hashS = hashId(id + 's')
-  const rawLeft = (hashX % 85) + 5  // 5–89 (range = 84, i.e. 85 − 1)
-  // Re-map into [5%, maxLeft] so spread is preserved on narrow viewports.
-  // Hard-clamping (the previous approach) collapsed all rawLeft > maxLeft to
-  // the same pixel column, creating a right-side cluster on mobile.
-  // 220 mirrors .canvas-entry { max-width: 220px } — keep in sync if that changes.
-  const maxLeft = Math.max(10, ((window.innerWidth - 220) / window.innerWidth) * 100)
-  const left = 5 + ((rawLeft - 5) / 84) * (maxLeft - 5)  // 84 = rawLeft range (89 − 5)
-  const top  = (hashY % 80) + 5    // 5% – 84%
-  const sizes = ['0.65rem', '0.8rem', '1rem', '1.1rem']
-  const fontSize = sizes[hashS % 4]
-  return { left, top, fontSize }
+function scheduleLayout() {
+  if (_layoutRaf) return
+  _layoutRaf = requestAnimationFrame(() => {
+    _layoutRaf = 0
+    layoutEntries()
+  })
 }
 
 function renderEntries(entries) {
@@ -40,6 +78,7 @@ function renderEntries(entries) {
   if (entries.length === 0) {
     // Leave canvas empty — ghost words carry the empty state
     container.innerHTML = ''
+    container.style.setProperty('--canvas-height', '0px')
     return
   }
 
@@ -50,14 +89,17 @@ function renderEntries(entries) {
   )?.id
 
   container.innerHTML = entries.map(e => {
-    const { left, top, fontSize } = entryPosition(e.id)
+    const fontSize = entryFontSize(e.id)
     const isNewest = e.id === newestId
+    const createdAt = Date.parse(e.created_at) || 0
     const imgHtml = e.image_url
-      ? `<img class="canvas-entry-image" src="${esc(e.image_url)}" alt="" loading="lazy" />`
+      ? `<img class="canvas-entry-image" src="${esc(e.image_url)}" alt="" decoding="async" />`
       : ''
     return `
       <div class="canvas-entry${isNewest ? ' canvas-entry--newest' : ''}"
-           style="left: ${left}%; top: ${top}%; font-size: ${fontSize};"
+           data-entry-id="${esc(e.id)}"
+           data-created-at="${createdAt}"
+           style="font-size: ${fontSize};"
            role="listitem">
         <span class="canvas-handle">${esc(e.name)}</span>
         <span class="canvas-message">${esc(e.message)}</span>
@@ -65,6 +107,19 @@ function renderEntries(entries) {
       </div>
     `
   }).join('')
+
+  for (const img of container.querySelectorAll('.canvas-entry-image')) {
+    if (!img.complete) {
+      img.addEventListener('load', scheduleLayout, { once: true })
+      img.addEventListener('error', scheduleLayout, { once: true })
+    }
+  }
+
+  if (_layoutRaf) {
+    cancelAnimationFrame(_layoutRaf)
+    _layoutRaf = 0
+  }
+  layoutEntries()
 }
 
 async function loadEntries() {
@@ -206,9 +261,30 @@ function esc(s) {
 export async function initGuestbook() {
   await loadEntries()
   setupForm()
-  let resizeTimer
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer)
-    resizeTimer = setTimeout(() => renderEntries(_entries), 150)
+
+  const container = document.getElementById('canvas-entries')
+  if (container && typeof ResizeObserver !== 'undefined') {
+    let lastW = container.clientWidth
+    let lastH = container.clientHeight
+    const observer = new ResizeObserver(() => {
+      const w = container.clientWidth
+      const h = container.clientHeight
+      if (w !== lastW || h !== lastH) {
+        lastW = w
+        lastH = h
+        scheduleLayout()
+      }
+    })
+    observer.observe(container)
+  } else {
+    let resizeTimer
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(scheduleLayout, 150)
+    })
+  }
+
+  document.fonts?.ready?.then(() => {
+    if (_entries.length > 0) scheduleLayout()
   })
 }

@@ -455,8 +455,21 @@ body {
   position: absolute;
   inset: 0;
   bottom: 2.5rem;       /* above form strip */
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  overscroll-behavior: auto;
   z-index: 1;
+}
+
+.canvas-entries::-webkit-scrollbar { display: none; }
+
+.canvas-entries::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: var(--canvas-height, 0px);
+  pointer-events: none;
 }
 
 .canvas-entry {
@@ -464,7 +477,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  max-width: 220px;
+  max-width: min(220px, calc(100% - 32px));
+  overflow-wrap: break-word;
 }
 
 .canvas-handle {
